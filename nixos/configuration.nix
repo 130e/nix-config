@@ -47,19 +47,28 @@
       # Enable flakes and new 'nix' command
       experimental-features = "nix-command flakes";
       # Opinionated: disable global registry
-      flake-registry = "";
+      # flake-registry = "";
       # Workaround for https://github.com/NixOS/nix/issues/9574
       nix-path = config.nix.nixPath;
     };
     # Opinionated: disable channels
-    channel.enable = false;
+    # channel.enable = false;
 
     # Opinionated: make flake registry and nix path match flake inputs
-    registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
-    nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+    # registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
+    # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
   # FIXME: Add the rest of your current configuration
+  
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+  environment.systemPackages = with pkgs; [
+    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    wget
+    curl
+    git
+  ];
   
   # Use the systemd-boot EFI bootloader.
   boot.loader = {
@@ -74,7 +83,7 @@
   };
 
   # TimeZone
-  time.timezone = "America/Los_Angeles";
+  time.timeZone = "America/Los_Angeles";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
