@@ -59,8 +59,9 @@
     # nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
-  # FIXME: Add the rest of your current configuration
-  
+  # Custom system wide programs
+  # ---------------------------
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -82,12 +83,22 @@
     networkmanager.enable = true;
   };
 
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+
   # TimeZone
   time.timeZone = "America/Los_Angeles";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
   # TODO: Is extra locale needed?
+
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-emoji
+    (nerdfonts.override {fonts = ["JetBrainsMono"];})
+  ];
 
   # Display
   programs.hyprland.enable = true;
