@@ -31,15 +31,24 @@
   };
 
   wayland.windowManager.hyprland.enable = true;
-  wayland.windowManager.hyprland.extraConfig = builtins.readFile ./hyprland.conf;
+  wayland.windowManager.hyprland.extraConfig = builtins.readFile ./dotfile/hypr/hyprland.conf;
   # for reference on hyprland
   # https://github.com/donovanglover/nix-config/blob/master/home/hyprland.nix
 
   programs.waybar.enable = true;
   home.file.".config/waybar" = {
-    source = dotfile/waybar;
+    source = ./dotfile/waybar;
     recursive = true;
   };
+
+  services.hypridle.enable = true;
+  # TODO: nixify this
+  home.file.".config/hypr" = {
+    source = ./dotfile/hypr/hypridle.conf;
+  };
+
+  programs.hyprlock.enable = true;
+  programs.hyprlock.extraConfig = builtins.readFile ./dotfile/hypr/hyprlock.conf;
 
   programs.firefox.enable = true;
 

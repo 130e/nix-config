@@ -69,6 +69,7 @@
     wget
     curl
     git
+    # polkit-kde-agent # TODO: For hyprlock
   ];
   
   # Use the systemd-boot EFI bootloader.
@@ -100,9 +101,12 @@
     (nerdfonts.override {fonts = ["JetBrainsMono"];})
   ];
 
-  # Display
+  # Display manager
   programs.hyprland.enable = true;
   # TODO: Hint electron app to use wayland?
+
+  # Enable hyprlock to use PAM
+  security.pam.services.hyprlock = {};
 
   # Enable sound.
   # hardware.pulseaudio.enable = true;
