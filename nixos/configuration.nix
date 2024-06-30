@@ -115,7 +115,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAoj8qO2mdeopNwZQohpiuYnFN+P2Cb5dtOLvCultWg/ user"
       ];
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
-      extraGroups = ["wheel" "audio" "networkmanager"];
+      extraGroups = ["wheel" "networkmanager"];
     };
   };
 
