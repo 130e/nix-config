@@ -89,6 +89,10 @@
   i18n.defaultLocale = "en_US.UTF-8";
   # TODO: Is extra locale needed?
 
+  # Display
+  programs.hyprland.enable = true;
+  # TODO: Hint electron app to use wayland?
+
   # Enable sound.
   # hardware.pulseaudio.enable = true;
   # OR
@@ -99,6 +103,9 @@
 
   # Set the default editor to vim
   environment.variables.EDITOR = "vim";
+
+  # NoPasswd needed for wheel
+  security.sudo.wheelNeedsPassword = false;
 
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
   users.users = {

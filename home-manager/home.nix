@@ -32,6 +32,10 @@
     };
   };
 
+  wayland.windowManager.hyprland.enable = true;
+
+  programs.firefox.enable = true;
+
   programs.git = {
     enable = true;
     userName = "130e";
@@ -46,6 +50,8 @@
 
     # utils
     ripgrep
+    tree
+    htop
   ];
 
   # Nicely reload system units when changing configs
