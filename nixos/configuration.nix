@@ -69,7 +69,6 @@
     wget
     curl
     git
-    # polkit-kde-agent # TODO: For hyprlock
   ];
   
   # Use the systemd-boot EFI bootloader.
