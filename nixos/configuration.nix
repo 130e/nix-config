@@ -102,14 +102,15 @@
 
   # Display manager
   programs.hyprland.enable = true;
-  # TODO: Hint electron app to use wayland?
+
+  # Hint electron app to use wayland
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # Enable hyprlock to use PAM
   security.pam.services.hyprlock = {};
 
   # Enable sound.
-  # hardware.pulseaudio.enable = true;
-  # OR
+  security.rtkit.enable = true; # TODO: Dig a bit more about this
   services.pipewire = {
     enable = true;
     pulse.enable = true;

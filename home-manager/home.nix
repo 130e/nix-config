@@ -30,6 +30,17 @@
     };
   };
 
+  # Input
+  # TODO: if doesn't start, check https://nixos.wiki/wiki/Fcitx5
+  i18n.inputMethod = {
+    enabled = "fcitx5";
+    fcitx5.addons = with pkgs; [
+        fcitx5-rime
+        fcitx5-configtool
+        fcitx5-chinese-addons
+      ];
+  };
+
   wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.extraConfig = builtins.readFile ./dotfile/hypr/hyprland.conf;
   # for reference on hyprland
@@ -40,6 +51,8 @@
     source = ./dotfile/waybar;
     recursive = true;
   };
+
+  programs.wofi.enable = true;
 
   services.hypridle = {
     enable = true;
@@ -87,12 +100,25 @@
   programs.hyprlock.extraConfig = builtins.readFile ./dotfile/hypr/hyprlock.conf;
 
   programs.firefox.enable = true;
+  programs.librewolf = {
+    enable = true;
+    # Enable WebGL, cookies and history
+    settings = {
+      "webgl.disabled" = false;
+      "privacy.resistFingerprinting" = false;
+      "privacy.clearOnShutdown.history" = false;
+      "privacy.clearOnShutdown.cookies" = false;
+      "network.cookie.lifetimePolicy" = 0;
+    };
+  };
 
   programs.git = {
     enable = true;
     userName = "130e";
     userEmail = "fernival328@gmail.com";
   };
+
+  services.syncthing.enable = true;
 
   home.packages = with pkgs; [
     neofetch
@@ -106,7 +132,12 @@
     tree
     htop
 
+    xfce.thunar
+    keepassxc
     brightnessctl
+    ungoogled-chromium # TODO: config it properly
+    telegram-desktop
+    slack
   ];
 
   # Nicely reload system units when changing configs
