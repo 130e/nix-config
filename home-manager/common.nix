@@ -13,12 +13,6 @@
     # inputs.nix-colors.homeManagerModule
   ];
 
-  # TODO: Set your username
-  home = {
-    username = "tila";
-    homeDirectory = "/home/tila";
-  };
-
   # Custom programs
   # ----------------------------
   programs.neovim.enable = true;
@@ -31,7 +25,6 @@
   };
 
   # Input
-  # TODO: if doesn't start, check https://nixos.wiki/wiki/Fcitx5
   i18n.inputMethod = {
     enabled = "fcitx5";
     fcitx5.addons = with pkgs; [

@@ -1,5 +1,5 @@
 {
-  description = "My Nix config";
+  description = "My weird Nix config";
 
   inputs = {
     # Nixpkgs
@@ -23,22 +23,37 @@
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
-      # FIXME replace with your hostname
-      IcySurface = nixpkgs.lib.nixosSystem {
+      EnvySea = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         # > Our main nixos configuration file <
         modules = [
-          ./nixos/configuration.nix
+          ./nixos/EnvySea/configuration.nix
 
           # home-manager as NixOS module
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.tila = import ./home-manager/home.nix;
+            home-manager.users.oar = import ./home-manager/oar.nix;
 
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
+            home-manager.extraSpecialArgs = inputs;
+          }
+        ];
+      };
+
+      IcySurface = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          ./nixos/IcySurface/configuration.nix
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.tila = import ./home-manager/tila.nix;
+
             home-manager.extraSpecialArgs = inputs;
           }
         ];
