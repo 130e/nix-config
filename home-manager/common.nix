@@ -15,7 +15,29 @@
 
   # Custom programs
   # ----------------------------
-  programs.neovim.enable = true;
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    defaultEditor = true;
+    extraPackages = with pkgs; [
+      wl-clipboard
+      unzip
+      python3
+      nodejs
+      gcc
+      gnumake
+      cargo
+      deadnix
+      statix
+    ];
+  };
+
+  xdg.configFile.nvim = {
+    source = inputs.nvchad-config;
+    recursive = true;
+  };
 
   programs.kitty = {
     enable = true;
@@ -30,12 +52,15 @@
     fcitx5.addons = with pkgs; [
         fcitx5-rime
         fcitx5-configtool
-        fcitx5-chinese-addons
       ];
   };
 
   wayland.windowManager.hyprland.enable = true;
-  wayland.windowManager.hyprland.extraConfig = builtins.readFile ./dotfile/hypr/hyprland.conf;
+  # wayland.windowManager.hyprland.extraConfig = builtins.readFile ./dotfile/hypr/hyprland.conf;
+  wayland.windowManager.hyprland.extraConfig = ''
+        env = XDG_PICTURES_DIR,$HOME/Picture/Screenshot
+        ${builtins.readFile ./dotfile/hypr/hyprland.conf}
+      '';
   # for reference on hyprland
   # https://github.com/donovanglover/nix-config/blob/master/home/hyprland.nix
 
@@ -92,7 +117,6 @@
   programs.hyprlock.enable = true;
   programs.hyprlock.extraConfig = builtins.readFile ./dotfile/hypr/hyprlock.conf;
 
-  programs.firefox.enable = true;
   programs.librewolf = {
     enable = true;
     # Enable WebGL, cookies and history
@@ -124,6 +148,9 @@
     ripgrep
     tree
     htop
+
+    hyprshot
+    hyprcursor
 
     xfce.thunar
     keepassxc

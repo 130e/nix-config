@@ -51,6 +51,13 @@
       # Workaround for https://github.com/NixOS/nix/issues/9574
       nix-path = config.nix.nixPath;
     };
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+
     # Opinionated: disable channels
     # channel.enable = false;
 
@@ -103,9 +110,6 @@
   # Display manager
   programs.hyprland.enable = true;
 
-  # Hint electron app to use wayland
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
-
   # Enable hyprlock to use PAM
   security.pam.services.hyprlock = {};
 
@@ -118,6 +122,11 @@
 
   # Set the default editor to vim
   environment.variables.EDITOR = "vim";
+
+  environment.sessionVariables = {
+    # Hint electron app to use wayland
+    NIXOS_OZONE_WL = "1";
+  };
 
   # NoPasswd needed for wheel
   security.sudo.wheelNeedsPassword = false;

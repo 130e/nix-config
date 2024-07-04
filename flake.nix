@@ -10,6 +10,12 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Nvchad
+    nvchad-config = {
+      url = "git+https://codeberg.org/daniel_chesters/nvchad_config";
+      flake = false;
+    };
   };
 
   outputs = {
@@ -38,7 +44,7 @@
 
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix
-            home-manager.extraSpecialArgs = inputs;
+            home-manager.extraSpecialArgs = {inherit inputs;};
           }
         ];
       };
