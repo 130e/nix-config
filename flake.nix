@@ -12,10 +12,14 @@
     };
 
     # Nvchad
-    nvchad-config = {
-      url = "git+https://codeberg.org/daniel_chesters/nvchad_config";
-      flake = false;
-    };
+    # nvchad-config = {
+    #   url = "git+https://codeberg.org/daniel_chesters/nvchad_config";
+    #   flake = false;
+    # };
+
+    # rice
+    # nixvim.url = "github:elythh/nixvim";
+
   };
 
   outputs = {

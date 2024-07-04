@@ -34,8 +34,11 @@
     ];
   };
 
+  # Based on nvchad nixos port
+  # https://codeberg.org/daniel_chesters/nvchad_config
   xdg.configFile.nvim = {
-    source = inputs.nvchad-config;
+    # source = inputs.nvchad-config;
+    source = ./nvchad_config;
     recursive = true;
   };
 
@@ -49,18 +52,25 @@
   # Input
   i18n.inputMethod = {
     enabled = "fcitx5";
-    fcitx5.addons = with pkgs; [
-        fcitx5-rime
-        fcitx5-configtool
+    fcitx5 = {
+      addons = with pkgs; [
+          fcitx5-rime
+          fcitx5-configtool
       ];
+    };
   };
 
   wayland.windowManager.hyprland.enable = true;
   # wayland.windowManager.hyprland.extraConfig = builtins.readFile ./dotfile/hypr/hyprland.conf;
   wayland.windowManager.hyprland.extraConfig = ''
+        monitor=eDP-1,preferred,auto,auto
+        monitor=,preferred,auto,auto,mirror,eDP-1
         env = XDG_PICTURES_DIR,$HOME/Picture/Screenshot
         ${builtins.readFile ./dotfile/hypr/hyprland.conf}
       '';
+  wayland.windowManager.hyprland.settings = {
+    # TODO
+  };
   # for reference on hyprland
   # https://github.com/donovanglover/nix-config/blob/master/home/hyprland.nix
 
@@ -89,11 +99,12 @@
         }
         
         # turn off keyboard backlight, comment out this section if you dont have a keyboard backlight.
-        #{ 
-        #  timeout = 150                                          # 2.5min.
-        #  on-timeout = brightnessctl -sd rgb:kbd_backlight set 0 # turn off keyboard backlight.
-        #  on-resume = brightnessctl -rd rgb:kbd_backlight        # turn on keyboard backlight.
-        #}
+        # all my laptop seems to be using hardware-managed kbd_backlight
+        # { 
+        #   timeout = 150;                                          # 2.5min.
+        #   on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0";  # turn off keyboard backlight.
+        #   on-resume = "brightnessctl -rd rgb:kbd_backlight";        # turn on keyboard backlight.
+        # }
         
         {
           timeout = 300;                                 # 5min
@@ -135,6 +146,8 @@
     userEmail = "fernival328@gmail.com";
   };
 
+  # Services
+  # -------------------------------
   services.syncthing.enable = true;
 
   home.packages = with pkgs; [
