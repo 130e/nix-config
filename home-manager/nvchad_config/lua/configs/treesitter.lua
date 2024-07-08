@@ -31,6 +31,7 @@ local M = {
     "diff",
     "csv",
     "fish",
+    "c", "cpp", "cmake",
   },
   indent = {
     enable = true,

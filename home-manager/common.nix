@@ -15,6 +15,26 @@
 
   # Custom programs
   # ----------------------------
+  gtk = {
+    enable = true;
+    # gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+    theme = {
+      # Dark theme
+      # name = "Kanagawa-BL";
+      # Light theme
+      name = "vimix-light-doder";
+    };
+    iconTheme = {
+      # name = "Kanagawa";
+      name = "Vimix-Doder";
+    };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme.name = "gtk3";
+  };
+
   programs.neovim = {
     enable = true;
     viAlias = true;
@@ -47,6 +67,9 @@
     font = {
       name = "JetBrainsMono Nerd Font";
     };
+    # Allow dynamic changing themes
+    extraConfig = "include ./current-theme.conf";
+    # theme = "Kanagawa"; # ReadOnly conf
   };
 
   # Input
@@ -62,7 +85,7 @@
 
   wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.extraConfig = ''
-        monitor=eDP-1,preferred,auto,auto
+        monitor=eDP-1,preferred,auto,1.25
         monitor=,preferred,auto,auto,mirror,eDP-1
         env = XDG_PICTURES_DIR,$HOME/Picture/Screenshot
         ${builtins.readFile ./hypr/hyprland.conf}
@@ -174,20 +197,25 @@
     htop
     bc
     unrar
+    ffmpeg
 
-    # gui
+    # gui apps
     hyprshot
     hyprcursor
     libnotify
     swww
-
     xfce.thunar
     keepassxc
     brightnessctl
-
     ungoogled-chromium # TODO: config it properly
     telegram-desktop
     slack
+    steam-run
+    # themes
+    kanagawa-gtk-theme
+    kanagawa-icon-theme
+    vimix-gtk-themes
+    vimix-icon-theme
   ];
 
   # Nicely reload system units when changing configs
