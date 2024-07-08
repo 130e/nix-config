@@ -34,6 +34,8 @@
       # })
     ];
     # Configure your nixpkgs instance
+    # TODO: For some reason this stop working for me
+    # Fix it by adding in flake
     config = {
       # Disable if you don't want unfree packages
       allowUnfree = true;

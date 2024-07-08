@@ -19,7 +19,6 @@
 
     # rice
     # nixvim.url = "github:elythh/nixvim";
-
   };
 
   outputs = {
@@ -45,6 +44,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.oar = import ./home-manager/oar.nix;
+            # home-manager.users.oar.nixpkgs.config.allowUnfreePredicate = _: true; 
 
             # Optionally, use home-manager.extraSpecialArgs to pass
             # arguments to home.nix

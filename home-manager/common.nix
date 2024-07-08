@@ -61,12 +61,11 @@
   };
 
   wayland.windowManager.hyprland.enable = true;
-  # wayland.windowManager.hyprland.extraConfig = builtins.readFile ./dotfile/hypr/hyprland.conf;
   wayland.windowManager.hyprland.extraConfig = ''
         monitor=eDP-1,preferred,auto,auto
         monitor=,preferred,auto,auto,mirror,eDP-1
         env = XDG_PICTURES_DIR,$HOME/Picture/Screenshot
-        ${builtins.readFile ./dotfile/hypr/hyprland.conf}
+        ${builtins.readFile ./hypr/hyprland.conf}
       '';
   wayland.windowManager.hyprland.settings = {
     # TODO
@@ -76,7 +75,18 @@
 
   programs.waybar.enable = true;
   home.file.".config/waybar" = {
-    source = ./dotfile/waybar;
+    source = ./waybar;
+    recursive = true;
+  };
+
+  services.dunst = {
+    enable = true;
+    configFile = "$XDG_CONFIG_HOME/dunst/dunstrc";
+  };
+
+  xdg.configFile.dunst = {
+    # source = inputs.nvchad-config;
+    source = ./dunst;
     recursive = true;
   };
 
@@ -107,7 +117,7 @@
         # }
         
         {
-          timeout = 300;                                 # 5min
+          timeout = 600;                                 # 10min
           on-timeout = "loginctl lock-session";          # lock screen when timeout has passed
         }
         
@@ -126,7 +136,7 @@
   };
 
   programs.hyprlock.enable = true;
-  programs.hyprlock.extraConfig = builtins.readFile ./dotfile/hypr/hyprlock.conf;
+  programs.hyprlock.extraConfig = builtins.readFile ./hypr/hyprlock.conf;
 
   programs.librewolf = {
     enable = true;
@@ -155,19 +165,26 @@
 
     # archive
     zip
+    unzip
     xz
 
     # utils
     ripgrep
     tree
     htop
+    bc
+    unrar
 
+    # gui
     hyprshot
     hyprcursor
+    libnotify
+    swww
 
     xfce.thunar
     keepassxc
     brightnessctl
+
     ungoogled-chromium # TODO: config it properly
     telegram-desktop
     slack
