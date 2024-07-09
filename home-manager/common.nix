@@ -20,13 +20,17 @@
     # gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
     theme = {
       # Dark theme
-      # name = "Kanagawa-BL";
+      name = "Kanagawa-BL";
       # Light theme
-      name = "vimix-light-doder";
+      # name = "vimix-light-doder";
     };
     iconTheme = {
-      # name = "Kanagawa";
-      name = "Vimix-Doder";
+      name = "Kanagawa";
+      # name = "Vimix-Doder";
+    };
+    cursorTheme = {
+      name = "Vimix-Cursors";
+      size = 24;
     };
   };
 
@@ -86,7 +90,7 @@
   wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.extraConfig = ''
         monitor=eDP-1,preferred,auto,1.25
-        monitor=,preferred,auto,auto,mirror,eDP-1
+        monitor=,preferred,auto,1.25
         env = XDG_PICTURES_DIR,$HOME/Picture/Screenshot
         ${builtins.readFile ./hypr/hyprland.conf}
       '';
@@ -106,7 +110,6 @@
     enable = true;
     configFile = "$XDG_CONFIG_HOME/dunst/dunstrc";
   };
-
   xdg.configFile.dunst = {
     # source = inputs.nvchad-config;
     source = ./dunst;
@@ -198,6 +201,7 @@
     bc
     unrar
     ffmpeg
+    pamixer
 
     # gui apps
     hyprshot
@@ -216,6 +220,7 @@
     kanagawa-icon-theme
     vimix-gtk-themes
     vimix-icon-theme
+    vimix-cursor-theme
   ];
 
   # Nicely reload system units when changing configs
