@@ -66,14 +66,48 @@
     recursive = true;
   };
 
+  programs.starship = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+  };
+
   programs.kitty = {
     enable = true;
     font = {
+      size = 11;
       name = "JetBrainsMono Nerd Font";
+    };
+    settings = {
+      confirm_os_window_close = 0;
+      shell = "fish";
+    };
+    shellIntegration = {
+      enableBashIntegration = true;
+      enableFishIntegration = true;
     };
     # Allow dynamic changing themes
     extraConfig = "include ./current-theme.conf";
-    # theme = "Kanagawa"; # ReadOnly conf
+  };
+
+  programs.btop.enable = true;
+
+  programs.ranger = {
+    enable = true;
+    settings = {
+      preview_images = true;
+      preview_images_method = "kitty";
+    };
+  };
+
+  programs.zathura = {
+    enable = true;
+    options = {
+      recolor = true;
+      recolor-darkcolor = "#dcd7ba";
+      recolor-lightcolor = "#1f1f28";
+      recolor-keephue = true;
+    };
   };
 
   # Input
@@ -89,8 +123,8 @@
 
   wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.extraConfig = ''
-        monitor=eDP-1,preferred,auto,1.25
-        monitor=,preferred,auto,1.25
+        monitor=eDP-1,preferred,auto,auto
+        monitor=,preferred,auto,auto
         env = XDG_PICTURES_DIR,$HOME/Picture/Screenshot
         ${builtins.readFile ./hypr/hyprland.conf}
       '';
@@ -180,6 +214,31 @@
     enable = true;
     userName = "130e";
     userEmail = "fernival328@gmail.com";
+  };
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    enableBashIntegration = true;
+    # for some reason this option is read only in direnv
+    # and always set true
+    # enableFishIntegration = true;
+  };
+
+  programs.bash.enable = true;
+
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      set fish_greeting # Disable greeting
+    '';
+    shellAliases = {
+      l = "ls -ahl";
+      ll = "ls -l";
+      hypredpoff = "hyprctl keyword monitor eDP-1,disable";
+      hypredpon = "hyprctl keyword monitor eDP-1,preferred,auto,auto";
+      hypredpmirror = "hyprctl keyword monitor HDMI-A-1,preferred,auto,auto,mirror,eDP-1";
+    };
   };
 
   # Services

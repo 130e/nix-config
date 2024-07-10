@@ -78,7 +78,7 @@
   },
   "backlight": {
     "interval": 5,
-    "format": "󰖨 {percent}%",
+    "format": "󰃟 {percent}%",
     "on-scroll-up": "brightnessctl set +5",
     "on-scroll-down": "brightnessctl set 5-",
   },
@@ -109,7 +109,7 @@
     "scroll-step": 1,
   },
   "custom/launcher": {
-    "format": " ",
+    "format": "󰙴 ",
     "tooltip": false,
     "on-click": "~/.config/rofi/launchers/misc/launcher.sh &",
   },
@@ -119,7 +119,7 @@
       "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"],
       "default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
     },
-    "format-full": "完毕 ",
+    "format-full": "󰛤 % ",
     "interval": 5,
     "states": {
       "warning": 25,

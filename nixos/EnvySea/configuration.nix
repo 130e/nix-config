@@ -98,12 +98,13 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-  # TODO: Is extra locale needed?
 
   fonts.packages = with pkgs; [
     noto-fonts
-    noto-fonts-cjk
-    noto-fonts-emoji
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
+    # noto-fonts-monochrome-emoji
+    noto-fonts-emoji-blob-bin
     (nerdfonts.override {fonts = ["JetBrainsMono"];})
   ];
 
@@ -140,10 +141,9 @@
       # Be sure to change it (using passwd) after rebooting!
       # initialPassword = "correcthorsebatterystaple";
       isNormalUser = true;
-      openssh.authorizedKeys.keys = [
-        # TODO: Add your SSH public key(s) here, if you plan on using SSH to connect
+      # openssh.authorizedKeys.keys = [
         # "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAoj8qO2mdeopNwZQohpiuYnFN+P2Cb5dtOLvCultWg/ user"
-      ];
+      # ];
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
       extraGroups = ["wheel" "networkmanager"];
     };
@@ -151,16 +151,16 @@
 
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
-  services.openssh = {
-    enable = true;
-    settings = {
-      # Opinionated: forbid root login through SSH.
-      PermitRootLogin = "no";
-      # Opinionated: use keys only.
-      # Remove if you want to SSH using passwords
-      PasswordAuthentication = false;
-    };
-  };
+  # services.openssh = {
+  #   enable = true;
+  #   settings = {
+  #     # Opinionated: forbid root login through SSH.
+  #     PermitRootLogin = "no";
+  #     # Opinionated: use keys only.
+  #     # Remove if you want to SSH using passwords
+  #     PasswordAuthentication = false;
+  #   };
+  # };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
