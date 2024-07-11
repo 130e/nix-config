@@ -11,7 +11,6 @@
         "--enable-features=UseOzonePlatform"
         "--enable-wayland-ime"
       ];
-      # package = pkgs.chromium.override {ungoogled = true;};
       package = pkgs.ungoogled-chromium;
     };
 
@@ -35,7 +34,7 @@
 
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  # [Optional] If you want to modify a .desktop entry
+  # [Optional] If you want to create/modify a desktop entry
   # xdg.desktopEntries = {
   #   org.telegram.desktop.desktop = {
   #     name = "Telegram Desktop";

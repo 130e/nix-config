@@ -242,13 +242,13 @@
     zip
     unzip
     xz
+    p7zip
 
     # utils
     ripgrep
     tree
-    htop
     bc
-    unrar
+    unrar-free
     ffmpeg
     pamixer
 
