@@ -11,6 +11,7 @@
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
+    ./gui-app.nix
   ];
 
   # Custom programs
@@ -103,7 +104,7 @@
   programs.zathura = {
     enable = true;
     options = {
-      recolor = true;
+      recolor = false;
       recolor-darkcolor = "#dcd7ba";
       recolor-lightcolor = "#1f1f28";
       recolor-keephue = true;
@@ -117,19 +118,20 @@
       addons = with pkgs; [
           fcitx5-rime
           fcitx5-configtool
+          fcitx5-gtk
+          fcitx5-tokyonight
       ];
     };
   };
 
-  wayland.windowManager.hyprland.enable = true;
-  wayland.windowManager.hyprland.extraConfig = ''
-        monitor=eDP-1,preferred,auto,auto
-        monitor=,preferred,auto,auto
-        env = XDG_PICTURES_DIR,$HOME/Picture/Screenshot
-        ${builtins.readFile ./hypr/hyprland.conf}
-      '';
-  wayland.windowManager.hyprland.settings = {
-    # TODO
+  wayland.windowManager.hyprland = {
+    enable = true;
+    extraConfig = ''
+          monitor=eDP-1,preferred,auto,auto
+          monitor=,preferred,auto,auto
+          env = XDG_PICTURES_DIR,$HOME/Picture/Screenshot
+          ${builtins.readFile ./hypr/hyprland.conf}
+        '';
   };
   # for reference on hyprland
   # https://github.com/donovanglover/nix-config/blob/master/home/hyprland.nix
@@ -198,18 +200,6 @@
   programs.hyprlock.enable = true;
   programs.hyprlock.extraConfig = builtins.readFile ./hypr/hyprlock.conf;
 
-  programs.librewolf = {
-    enable = true;
-    # Enable WebGL, cookies and history
-    settings = {
-      "webgl.disabled" = false;
-      "privacy.resistFingerprinting" = false;
-      "privacy.clearOnShutdown.history" = false;
-      "privacy.clearOnShutdown.cookies" = false;
-      "network.cookie.lifetimePolicy" = 0;
-    };
-  };
-
   programs.git = {
     enable = true;
     userName = "130e";
@@ -270,9 +260,6 @@
     xfce.thunar
     keepassxc
     brightnessctl
-    ungoogled-chromium # TODO: config it properly
-    telegram-desktop
-    slack
     steam-run
     # themes
     kanagawa-gtk-theme
@@ -280,6 +267,8 @@
     vimix-gtk-themes
     vimix-icon-theme
     vimix-cursor-theme
+    everforest-gtk-theme
+    tokyonight-gtk-theme
   ];
 
   # Nicely reload system units when changing configs

@@ -126,7 +126,6 @@
 
   environment.sessionVariables = {
     # Hint electron app to use wayland
-    NIXOS_OZONE_WL = "1";
   };
 
   # NoPasswd needed for wheel
