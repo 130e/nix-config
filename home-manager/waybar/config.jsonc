@@ -53,12 +53,12 @@
   },
   "memory": {
     "interval": 5,
-    "format": "   {}% ",
+    "format": "  {}% ",
     "max-length": 10,
   },
   "cpu": {
     "interval": 5,
-    "format": "   {}% ",
+    "format": "  {}% ",
     "max-length": 10,
   },
   "tray": {
@@ -106,6 +106,7 @@
       "default": ["󰕿 ", "󰖀 ", "󰕾 "],
     },
     "on-click": "pamixer -t",
+    "on-double-click": "pavucontrol",
     "scroll-step": 1,
   },
   "custom/launcher": {

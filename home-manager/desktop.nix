@@ -3,6 +3,10 @@
   config,
   ...
 }: {
+  imports = [
+    ./hypr.nix
+  ];
+
   programs = {
     chromium = {
       enable = true;
@@ -25,14 +29,70 @@
         "network.cookie.lifetimePolicy" = 0;
       };
     };
+
+    zathura = {
+      enable = true;
+      options = {
+        recolor = false; # do not recolor by default
+        recolor-darkcolor = "#dcd7ba";
+        recolor-lightcolor = "#1f1f28";
+        recolor-keephue = true;
+      };
+    };
+
   };
 
-  home.packages = with pkgs; [
-    telegram-desktop
-    slack
-  ];
+  home = {
+    packages = with pkgs; [
+      telegram-desktop
+      slack
+      qpwgraph
+      pavucontrol
 
-  home.sessionVariables.NIXOS_OZONE_WL = "1";
+      # themes
+      kanagawa-gtk-theme
+      vimix-gtk-themes
+
+      kanagawa-icon-theme
+      papirus-icon-theme
+
+      vimix-cursor-theme
+      simp1e-cursors
+      bibata-cursors
+    ];
+
+    sessionVariables.NIXOS_OZONE_WL = "1";
+  };
+
+  gtk = {
+    enable = true;
+    # gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+    theme = {
+      # Dark theme
+      name = "Kanagawa-BL";
+      # Light theme
+      # name = "vimix-light-doder";
+    };
+    iconTheme = {
+      name = "Papirus";
+      # name = "Vimix-Doder";
+    };
+    cursorTheme = {
+      name = "Bibata-Modern-Ice";
+      # name = "Vimix-Cursors";
+      size = 24;
+    };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme.name = "gtk3";
+  };
+
+  services = {
+    blueman-applet.enable = true;
+    mpris-proxy.enable = true; # enable earbud keys
+  };
 
   # [Optional] If you want to create/modify a desktop entry
   # xdg.desktopEntries = {

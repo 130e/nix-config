@@ -90,8 +90,17 @@
     networkmanager.enable = true;
   };
 
-  hardware.bluetooth.enable = true; # enables support for Bluetooth
-  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  hardware.bluetooth = {
+    enable = true; # enables support for Bluetooth
+    powerOnBoot = true; # powers up the default Bluetooth controller on boot
+    settings = {
+      General = {
+        Experimental = true; # Watch out for bugs
+      };
+    };
+  };
+
+  services.blueman.enable = true;
 
   # TimeZone
   time.timeZone = "America/Los_Angeles";
@@ -115,17 +124,28 @@
   security.pam.services.hyprlock = {};
 
   # Enable sound.
+  # https://nixos.wiki/wiki/PipeWire
   security.rtkit.enable = true; # TODO: Dig a bit more about this
   services.pipewire = {
     enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
     pulse.enable = true;
+    wireplumber.extraConfig = {
+      "monitor.bluez.properties" = {
+        "bluez5.enable-sbc-xq" = true;
+        "bluez5.enable-msbc" = true;
+        "bluez5.enable-hw-volume" = true;
+        "bluez5.roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+      };
+    };
   };
 
   # Set the default editor to vim
   environment.variables.EDITOR = "vim";
 
   environment.sessionVariables = {
-    # Hint electron app to use wayland
+    # Set in home manager if possible
   };
 
   # NoPasswd needed for wheel
