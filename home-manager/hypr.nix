@@ -5,12 +5,24 @@
 }: {
   wayland.windowManager.hyprland = {
     enable = true;
-    extraConfig = ''
-          monitor=eDP-1,preferred,auto,1
-          monitor=,preferred,auto,auto
-          env = XDG_PICTURES_DIR,$HOME/Picture/Screenshot
-          ${builtins.readFile ./hypr/hyprland.conf}
-        '';
+    extraConfig = builtins.readFile ./hypr/hyprland.conf;
+    settings = {
+      monitor = [
+        "monitor=eDP-1,preferred,auto,1"
+        "monitor=,preferred,auto,auto"
+      ];
+      env = [ "XDG_PICTURES_DIR,$HOME/Picture/Screenshot" ];
+      exec-once = [
+        "waybar"
+        "swww-daemon"
+        "hyprctl setcursor Bibata-Modern-Ice 24"
+        # hyprctl setcursor Vimix-Cursors 24
+        "[workspace 1 silent] kitty"
+        "[workspace 2 silent] qutebrowser"
+        "[workspace 3 silent] librewolf"
+        "[workspace 10 silent] kitty --hold bash -c 'btop'"
+      ];
+    };
   };
   # for reference on hyprland
   # https://github.com/donovanglover/nix-config/blob/master/home/hyprland.nix
@@ -29,23 +41,8 @@
       hyprshot
       hyprcursor
       libnotify
-      swww
-
-      xfce.thunar
-      keepassxc
-
-      brightnessctl
-      pamixer
-
-      steam-run
     ];
-
-    # file.".config/waybar" = {
-    #   source = ./waybar;
-    #   recursive = true;
-    # };
   };
-
 
   xdg.configFile = {
     dunst = {
@@ -91,16 +88,21 @@
           # }
           
           {
+            timeout = 300;                                 # 5min
+            on-timeout = "hyprctl dispatch dpms off";      # screen off when timeout has passed
+            on-resume = "hyprctl dispatch dpms on";        # screen on when activity is detected after timeout has fired.
+          }
+          
+          {
             timeout = 600;                                 # 10min
             on-timeout = "loginctl lock-session";          # lock screen when timeout has passed
           }
           
           {
-            timeout = 330;                                 # 5.5min
-            on-timeout = "hyprctl dispatch dpms off";      # screen off when timeout has passed
-            on-resume = "hyprctl dispatch dpms on";        # screen on when activity is detected after timeout has fired.
+            timeout = 1800;                                # 30min
+            on-timeout = "systemctl suspend";              # suspend pc
           }
-          
+
           {
             timeout = 1800;                                # 30min
             on-timeout = "systemctl suspend";              # suspend pc

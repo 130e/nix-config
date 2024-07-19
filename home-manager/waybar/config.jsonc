@@ -31,15 +31,15 @@
     "format": "{icon}",
     "format-icons": {
       "default": "",
-      "1": " ",
-      "2": " ",
+      "1": " ",
+      "2": " ",
       "3": "󰈹 ",
-      "4": " ",
-      "5": "󰇎 ",
-      "6": "󰊠 ",
-      "7": "7 ",
-      "8": "8 ",
-      "9": "9 ",
+      "4": "󰇍 ",
+      "5": "󱫀 ",
+      "6": "󰋘 ",
+      "7": "󰊠 ",
+      "8": "󰲮 ",
+      "9": "󰲲 ",
       "active": " ",
       "urgent": "󰂚 ",
     },
@@ -52,13 +52,14 @@
     },
   },
   "memory": {
-    "interval": 5,
-    "format": "  {}% ",
+    "interval": 10,
+    "format": " {used}",
+    "tooltip-format": "{used}GiB used of {total}GiB ({percentage}%)",
     "max-length": 10,
   },
   "cpu": {
-    "interval": 5,
-    "format": "  {}% ",
+    "interval": 10,
+    "format": " {usage}%",
     "max-length": 10,
   },
   "tray": {
@@ -72,8 +73,8 @@
   "idle_inhibitor": {
     "format": "{icon}",
     "format-icons": {
-      "activated": " 󰛊 ",
-      "deactivated": " 󰾫 ",
+      "activated": "󰛊 ",
+      "deactivated": "󰾫 ",
     },
   },
   "backlight": {

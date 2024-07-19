@@ -72,7 +72,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    vim # The Nano editor is also installed by default.
     wget
     curl
     git
@@ -85,7 +85,7 @@
   };
 
   networking = {
-    # TODO: Set your hostname
+    # Volatile: Set your hostname
     hostName = "EnvySea";
     networkmanager.enable = true;
   };
@@ -141,6 +141,17 @@
     };
   };
 
+  # Provide bin with set capabilities
+  # [TODO] Does this add a lot of dependency? Strange
+  # security.wrappers = {
+  #   nethogs = {
+  #     owner = "root";
+  #     group = "root";
+  #     capabilities = "cap_net_admin,cap_net_raw,cap_dac_read_search,cap_sys_ptrace+pe";
+  #     source = "${pkgs.iputils.out}/bin/nethogs";
+  #   };
+  # };
+
   # Set the default editor to vim
   environment.variables.EDITOR = "vim";
 
@@ -150,6 +161,9 @@
 
   # NoPasswd needed for wheel
   security.sudo.wheelNeedsPassword = false;
+
+  # Enable powertop auto-tune
+  powerManagement.powertop.enable = true;
 
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
   users.users = {
@@ -165,6 +179,14 @@
       # ];
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
       extraGroups = ["wheel" "networkmanager"];
+    };
+  };
+
+  virtualisation.docker = {
+    enable = true;
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
     };
   };
 

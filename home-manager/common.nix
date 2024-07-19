@@ -127,8 +127,14 @@
     };
   };
 
+  # https://wiki.nixos.org/wiki/MPV
+  programs.mpv = {
+    enable = true;
+  };
+
   # Services
   # -------------------------------
+
   services.syncthing.enable = true;
 
   home.packages = with pkgs; [
@@ -146,6 +152,11 @@
     bc
     unrar-free
     ffmpeg
+
+    # Fun stuff
+    # TODO: auto download piper sound resources 
+    # https://github.com/rhasspy/piper
+    piper-tts
   ];
 
   # Nicely reload system units when changing configs

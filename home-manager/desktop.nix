@@ -30,6 +30,23 @@
       };
     };
 
+    qutebrowser = {
+      enable = true;
+      searchEngines = {
+        DEFAULT = "https://www.startpage.com/sp/search?query={}";
+        g = "https://www.google.com/search?hl=en&q={}";
+        nw = "https://wiki.nixos.org/index.php?search={}";
+        hm = "https://home-manager-options.extranix.com/?query={}";
+      };
+      extraConfig = ''
+        c.content.pdfjs = True
+        c.auto_save.session = True
+        c.session.lazy_restore = True
+        c.url.default_page = "https://www.startpage.com/do/mypage.pl?prfe=9d62635f7829a75deaa1031e094f76a9011877e47e0a9cf971eb2310d44a64be5440a0ad06078a8e171817f36442ad6a7e5e1e86106af1a487114c626138a30a616138e3bc3dc671a053f958"
+        c.url.start_pages = "https://www.startpage.com/do/mypage.pl?prfe=9d62635f7829a75deaa1031e094f76a9011877e47e0a9cf971eb2310d44a64be5440a0ad06078a8e171817f36442ad6a7e5e1e86106af1a487114c626138a30a616138e3bc3dc671a053f958"
+      '';
+    };
+
     zathura = {
       enable = true;
       options = {
@@ -44,29 +61,39 @@
 
   home = {
     packages = with pkgs; [
+      # Apps
       telegram-desktop
       slack
+      xfce.thunar
+      keepassxc
+      steam-run
+      # Audio
       qpwgraph
       pavucontrol
-
-      # themes
+      playerctl
+      pamixer
+      # Display
+      swww
+      brightnessctl
+      # gtk themes
       kanagawa-gtk-theme
       vimix-gtk-themes
-
+      # icon themes
       kanagawa-icon-theme
       papirus-icon-theme
-
+      # cursor themes
       vimix-cursor-theme
       simp1e-cursors
       bibata-cursors
     ];
-
+    # Force app to use wayland; doesn't work most of time
     sessionVariables.NIXOS_OZONE_WL = "1";
   };
 
   gtk = {
     enable = true;
     # gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+    # theme: /etc/profiles/per-user/$USER/share
     theme = {
       # Dark theme
       name = "Kanagawa-BL";
@@ -92,6 +119,7 @@
   services = {
     blueman-applet.enable = true;
     mpris-proxy.enable = true; # enable earbud keys
+    playerctld.enable = true;
   };
 
   # [Optional] If you want to create/modify a desktop entry
