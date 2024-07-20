@@ -17,9 +17,12 @@
         "swww-daemon"
         "hyprctl setcursor Bibata-Modern-Ice 24"
         "[workspace 1 silent] kitty"
-        "[workspace 2 silent] qutebrowser"
-        "[workspace 3 silent] librewolf"
+        "[workspace 2 silent] librewolf"
         "[workspace 10 silent] kitty --hold bash -c 'btop'"
+      ];
+      "$mainMod" = "SUPER";
+      bind = [
+        "$mainMod SHIFT, T, exec, hyprmontoggle"
       ];
     };
   };
@@ -40,6 +43,7 @@
       hyprshot
       hyprcursor
       libnotify
+      (writeShellScriptBin "hyprmontoggle" (builtins.readFile ./hypr/hyprmontoggle.sh))
     ];
   };
 

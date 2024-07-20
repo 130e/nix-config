@@ -106,9 +106,7 @@
     enable = true;
     nix-direnv.enable = true;
     enableBashIntegration = true;
-    # for some reason this option is read only in direnv
-    # and always set true
-    # enableFishIntegration = true;
+    # enableFishIntegration = true; # this option is readonly and always true
   };
 
   programs.bash.enable = true;
@@ -121,9 +119,6 @@
     shellAliases = {
       l = "ls -ahl";
       ll = "ls -l";
-      hypredpoff = "hyprctl keyword monitor eDP-1,disable";
-      hypredpon = "hyprctl keyword monitor eDP-1,preferred,auto,auto";
-      hypredpmirror = "hyprctl keyword monitor HDMI-A-1,preferred,auto,auto,mirror,eDP-1";
     };
   };
 

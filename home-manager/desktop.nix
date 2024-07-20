@@ -30,22 +30,22 @@
       };
     };
 
-    qutebrowser = {
-      enable = true;
-      searchEngines = {
-        DEFAULT = "https://www.startpage.com/sp/search?query={}";
-        g = "https://www.google.com/search?hl=en&q={}";
-        nw = "https://wiki.nixos.org/index.php?search={}";
-        hm = "https://home-manager-options.extranix.com/?query={}";
-      };
-      extraConfig = ''
-        c.content.pdfjs = True
-        c.auto_save.session = True
-        c.session.lazy_restore = True
-        c.url.default_page = "https://www.startpage.com/do/mypage.pl?prfe=9d62635f7829a75deaa1031e094f76a9011877e47e0a9cf971eb2310d44a64be5440a0ad06078a8e171817f36442ad6a7e5e1e86106af1a487114c626138a30a616138e3bc3dc671a053f958"
-        c.url.start_pages = "https://www.startpage.com/do/mypage.pl?prfe=9d62635f7829a75deaa1031e094f76a9011877e47e0a9cf971eb2310d44a64be5440a0ad06078a8e171817f36442ad6a7e5e1e86106af1a487114c626138a30a616138e3bc3dc671a053f958"
-      '';
-    };
+    # qutebrowser = {
+    #   enable = true;
+    #   searchEngines = {
+    #     DEFAULT = "https://www.startpage.com/sp/search?query={}";
+    #     g = "https://www.google.com/search?hl=en&q={}";
+    #     nw = "https://wiki.nixos.org/index.php?search={}";
+    #     hm = "https://home-manager-options.extranix.com/?query={}";
+    #   };
+    #   extraConfig = ''
+    #     c.content.pdfjs = True
+    #     c.auto_save.session = True
+    #     c.session.lazy_restore = True
+    #     c.url.default_page = "https://www.startpage.com/do/mypage.pl?prfe=9d62635f7829a75deaa1031e094f76a9011877e47e0a9cf971eb2310d44a64be5440a0ad06078a8e171817f36442ad6a7e5e1e86106af1a487114c626138a30a616138e3bc3dc671a053f958"
+    #     c.url.start_pages = "https://www.startpage.com/do/mypage.pl?prfe=9d62635f7829a75deaa1031e094f76a9011877e47e0a9cf971eb2310d44a64be5440a0ad06078a8e171817f36442ad6a7e5e1e86106af1a487114c626138a30a616138e3bc3dc671a053f958"
+    #   '';
+    # };
 
     zathura = {
       enable = true;
@@ -118,7 +118,7 @@
 
   services = {
     blueman-applet.enable = true;
-    mpris-proxy.enable = true; # enable earbud keys
+    mpris-proxy.enable = true; # enable earbud control
     playerctld.enable = true;
   };
 
