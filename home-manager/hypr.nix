@@ -8,15 +8,14 @@
     extraConfig = builtins.readFile ./hypr/hyprland.conf;
     settings = {
       monitor = [
-        "monitor=eDP-1,preferred,auto,1"
-        "monitor=,preferred,auto,auto"
+        "eDP-1,preferred,auto,1"
+        ",preferred,auto,auto"
       ];
       env = [ "XDG_PICTURES_DIR,$HOME/Picture/Screenshot" ];
       exec-once = [
         "waybar"
         "swww-daemon"
         "hyprctl setcursor Bibata-Modern-Ice 24"
-        # hyprctl setcursor Vimix-Cursors 24
         "[workspace 1 silent] kitty"
         "[workspace 2 silent] qutebrowser"
         "[workspace 3 silent] librewolf"
