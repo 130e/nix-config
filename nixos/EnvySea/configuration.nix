@@ -151,6 +151,27 @@
   #     source = "${pkgs.iputils.out}/bin/nethogs";
   #   };
   # };
+  # programs.firejail = {
+  #   enable = true;
+  #   wrappedBinaries = {
+  #     slack = {
+  #       executable = "${lib.getBin pkgs.slack}/bin/slack";
+  #       profile = "${pkgs.firejail}/etc/firejail/slack.profile";
+  #     };
+  #     telegram-desktop = {
+  #       executable = "${lib.getBin pkgs.tdesktop}/bin/telegram-desktop";
+  #       profile = "${pkgs.firejail}/etc/firejail/telegram-desktop.profile";
+  #     };
+  #     mpv = {
+  #       executable = "${lib.getBin pkgs.mpv}/bin/mpv";
+  #       profile = "${pkgs.firejail}/etc/firejail/mpv.profile";
+  #     };
+  #     zoom = {
+  #       executable = "${lib.getBin pkgs.mpv}/bin/zoom";
+  #       profile = "${pkgs.firejail}/etc/firejail/zoom.profile";
+  #     };
+  #   };
+  # };
 
   # Set the default editor to vim
   environment.variables.EDITOR = "vim";
@@ -163,7 +184,12 @@
   security.sudo.wheelNeedsPassword = false;
 
   # Enable powertop auto-tune
-  powerManagement.powertop.enable = true;
+  # powerManagement.powertop.enable = true;
+  services.tlp.enable = true;
+
+  # Enable network monitoring
+  programs.iftop.enable = true;
+  programs.wireshark.enable = true;
 
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
   users.users = {
@@ -178,7 +204,7 @@
         # "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAoj8qO2mdeopNwZQohpiuYnFN+P2Cb5dtOLvCultWg/ user"
       # ];
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
-      extraGroups = ["wheel" "networkmanager"];
+      extraGroups = ["wheel" "networkmanager" "wireshark"];
     };
   };
 
@@ -189,6 +215,11 @@
       setSocketVariable = true;
     };
   };
+
+  # USB mounting support
+  services.devmon.enable = true;
+  services.gvfs.enable = true; 
+  services.udisks2.enable = true;
 
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.

@@ -3,32 +3,6 @@
   config,
   ...
 }: {
-  wayland.windowManager.hyprland = {
-    enable = true;
-    extraConfig = builtins.readFile ./hypr/hyprland.conf;
-    settings = {
-      monitor = [
-        "eDP-1,preferred,auto,1"
-        ",preferred,auto,auto"
-      ];
-      env = [ "XDG_PICTURES_DIR,$HOME/Picture/Screenshot" ];
-      exec-once = [
-        "waybar"
-        "swww-daemon"
-        "hyprctl setcursor Bibata-Modern-Ice 24"
-        "[workspace 1 silent] kitty"
-        "[workspace 2 silent] librewolf"
-        "[workspace 10 silent] kitty --hold bash -c 'btop'"
-      ];
-      "$mainMod" = "SUPER";
-      bind = [
-        "$mainMod SHIFT, T, exec, hyprmontoggle"
-      ];
-    };
-  };
-  # for reference on hyprland
-  # https://github.com/donovanglover/nix-config/blob/master/home/hyprland.nix
-
   programs = {
     waybar.enable = true;
     wofi.enable = true;
@@ -43,7 +17,7 @@
       hyprshot
       hyprcursor
       libnotify
-      (writeShellScriptBin "hyprmontoggle" (builtins.readFile ./hypr/hyprmontoggle.sh))
+      (writeShellScriptBin "hyprmontoggle" (builtins.readFile ./hypr/hyprmontoggle.sh)) # Scrcipt for toggling monitor
     ];
   };
 
@@ -116,5 +90,46 @@
 
   # End of services
   };
+
+  # for reference on hyprland
+  # https://github.com/donovanglover/nix-config/blob/master/home/hyprland.nix
+  wayland.windowManager.hyprland = {
+    enable = true;
+    extraConfig = builtins.readFile ./hypr/hyprland.conf;
+    settings = {
+      monitor = [
+        "eDP-1,preferred,auto,1"
+        ",preferred,auto,auto"
+      ];
+      env = [ "XDG_PICTURES_DIR,$HOME/Picture/Screenshot" ];
+      exec-once = [
+        "waybar"
+        "swww-daemon"
+        "hyprctl setcursor Bibata-Modern-Ice 24"
+        "[workspace 1 silent] kitty"
+        "[workspace 2 silent] librewolf"
+        "[workspace 10 silent] kitty --hold bash -c 'btop'"
+      ];
+      "$mainMod" = "SUPER";
+      bind = [
+        "$mainMod SHIFT, T, exec, hyprmontoggle"
+      ];
+      windowrulev2 = [
+        "suppressevent maximize, class:.*" # You'll probably like this.
+        "float,class:^(chromium)$"
+        "float,class:^(librewolf)$,title:^(Library)$"
+        "float,class:^(thunar)$"
+        "float,class:^(fcitx5-config.*)$"
+        "float,class:^(.*blueman-manager.*)$"
+        "float,class:^(.*qpwgraph)$"
+        "float,class:^(pavucontrol)$"
+        "float,initialClass:^(mpv)$"
+        "float,class:(?i)^(slack)$" # slack desktop is such a headache
+        "float,class:^(.telegram-desktop-wrapped)$"
+        "float,class:^(org.telegram.desktop)$"
+      ];
+    };
+  };
+
   # End of nix file
 }

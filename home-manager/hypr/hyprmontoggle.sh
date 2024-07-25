@@ -45,14 +45,14 @@ fi
 
 # For dynamically toggling which monitor is active later via a keybind
 if [ "$NUM_MONITORS" -gt 1 ]; then # Handling multiple monitors
-	if hyprctl monitors | cut --delimiter ' ' --fields 2 | grep --quiet ^$EXTERNAL_MONITOR; then
-		hyprctl keyword monitor $INTERNAL_MONITOR,preferred,0x0,1
-		# move_all_workspaces_to_monitor $INTERNAL_MONITOR
-		hyprctl keyword monitor "$EXTERNAL_MONITOR, disable"
-	else
+	if hyprctl monitors | cut --delimiter ' ' --fields 2 | grep --quiet ^$INTERNAL_MONITOR; then
 		hyprctl keyword monitor $EXTERNAL_MONITOR,preferred,0x0,1
 		# move_all_workspaces_to_monitor $EXTERNAL_MONITOR
 		hyprctl keyword monitor "$INTERNAL_MONITOR, disable"
+	else
+		hyprctl keyword monitor $INTERNAL_MONITOR,preferred,0x0,1
+		# move_all_workspaces_to_monitor $INTERNAL_MONITOR
+		hyprctl keyword monitor "$EXTERNAL_MONITOR, disable"
 	fi
 else # If the external monitor is disconnected without running this script first, it might become the case that no monitor is on - therefore turn on the laptop monitor!
 	hyprctl keyword monitor $INTERNAL_MONITOR,preferred,0x0,1

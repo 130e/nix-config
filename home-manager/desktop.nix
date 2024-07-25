@@ -111,10 +111,26 @@
     };
   };
 
+  # Use variables?
   qt = {
     enable = true;
-    platformTheme.name = "gtk3";
+    platformTheme.name = "qtct";
+    # style = {
+    #   # install kvantum and use it to set qt theme automatically
+    #   name = "kvantum";
+    #   # Kvantum theme package can be install as package separately
+    # };
   };
+
+  # Set Kvantum theme declaratively and as readonly
+  # xdg.configFile = {
+  #   "Kvantum/kvantum.kvconfig".text = ''
+  #     [General]
+  #     theme=Catppuccin-Frappe-Blue
+  #   '';
+  #   # If you need copy kvantum theme from install folder
+  #   "Kvantum/Catppuccin-Frappe-Blue".source = "${pkgs.catppuccin-kvantum}/share/Kvantum/Catppuccin-Frappe-Blue";
+  # };
 
   services = {
     blueman-applet.enable = true;
@@ -123,32 +139,50 @@
   };
 
   # [Optional] If you want to create/modify a desktop entry
-  # xdg.desktopEntries = {
-  #   org.telegram.desktop.desktop = {
-  #     name = "Telegram Desktop";
-  #     comment = "Official desktop version of Telegram messaging app";
-  #     exec = "telegram-desktop --enable-features=UseOzonePlatform --enable-wayland-ime";
-  #     icon="telegram";
-  #     terminal=false;
-  #     type="Application";
-  #     categories=["Chat" "Network" "InstantMessaging" "Qt"];
-  #     mimeType=["x-scheme-handler/tg"];
-  #     settings = {
-  #       TryExec = "telegram-desktop";
-  #       StartupWMClass="TelegramDesktop";
-  #       Keywords = "tg;chat;im;messaging;messenger;sms;tdesktop;";
-  #       DBusActivatable="true";
-  #       SingleMainWindow="true";
-  #       X-GNOME-UsesNotifications="true";
-  #       X-GNOME-SingleWindow="true";
-  #     };
-  #     actions = {
-  #       "quit" = {
-  #         exec="telegram-desktop -quit";
-  #         name="Quit Telegram";
-  #         icon="application-exit";
-  #       };
-  #     };
-  #   };
-  # };
+  xdg.desktopEntries = {
+    "org.telegram.desktop" = {
+      name = "Telegram Desktop";
+      comment = "Official desktop version of Telegram messaging app";
+      exec = "telegram-desktop --enable-features=UseOzonePlatform --enable-wayland-ime -- %u";
+      icon="telegram";
+      terminal=false;
+      type="Application";
+      categories=["Chat" "Network" "InstantMessaging" "Qt"];
+      mimeType=["x-scheme-handler/tg"];
+      settings = {
+        TryExec = "telegram-desktop";
+        StartupWMClass="TelegramDesktop";
+        Keywords = "tg;chat;im;messaging;messenger;sms;tdesktop;";
+        DBusActivatable="true";
+        SingleMainWindow="true";
+        X-GNOME-UsesNotifications="true";
+        X-GNOME-SingleWindow="true";
+      };
+      actions = {
+        "quit" = {
+          exec="telegram-desktop -quit";
+          name="Quit Telegram";
+          icon="application-exit";
+        };
+      };
+    };
+
+    "slack" = {
+      name = "Slack";
+      comment = "Slack Desktop";
+      genericName = "Slack Client for Linux";
+      exec = "slack --enable-features=UseOzonePlatform --enable-wayland-ime -s %U";
+      icon="slack";
+      terminal=false;
+      type="Application";
+      startupNotify=true;
+      categories=["GNOME" "GTK" "Network" "InstantMessaging"];
+      mimeType=["x-scheme-handler/slack"];
+      settings = {
+        StartupWMClass="Slack";
+      };
+    };
+  # End of xdg desktopEntries 
+  };
+  # End of config
 }

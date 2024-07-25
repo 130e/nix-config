@@ -147,6 +147,17 @@
     bc
     unrar-free
     ffmpeg
+    file
+
+    # USB
+    usbutils
+
+    # network
+    tcpdump
+    iperf3
+    nethogs
+    wireshark-qt
+    qtwirediff
 
     # Fun stuff
     # TODO: auto download piper sound resources 

@@ -60,17 +60,17 @@
   "memory": {
     "interval": 10,
     "format": " {percentage}%",
-    "tooltip-format": "Memory: {used}/{total} GB\nSwap: {swapUsed}/{swapTotal} GB",
+    "tooltip-format": "Memory: {used} / {total}\nSwap: {swapUsed} / {swapTotal}",
     "max-length": 10,
   },
   "temperature": {
     "interval": 10,
     "tooltip": true,
-    "hwmon-path": [
-      "/sys/class/hwmon/hwmon1/temp1_input",
-      "/sys/class/thermal/thermal_zone0/temp",
-    ],
-    //"thermal-zone": 0,
+    // "hwmon-path": [
+    //   "/sys/class/hwmon/hwmon1/temp1_input",
+    //   "/sys/class/thermal/thermal_zone0/temp",
+    // ],
+    "thermal-zone": 0,
     // https://www.reddit.com/r/ASUSROG/comments/17857ux/what_temperatures_begin_to_damage_the_cpu/
     "critical-threshold": 90,
     "format-critical": "{icon} {temperatureC}°C",
