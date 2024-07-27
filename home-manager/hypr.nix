@@ -107,7 +107,7 @@
         "swww-daemon"
         "hyprctl setcursor Bibata-Modern-Ice 24"
         "[workspace 1 silent] kitty"
-        "[workspace 2 silent] librewolf"
+        "[workspace 2 silent] chromium"
         "[workspace 10 silent] kitty --hold bash -c 'btop'"
       ];
       "$mainMod" = "SUPER";
@@ -124,7 +124,7 @@
         "float,class:^(.*qpwgraph)$"
         "float,class:^(pavucontrol)$"
         "float,initialClass:^(mpv)$"
-        "float,class:(?i)^(slack)$" # slack desktop is such a headache
+        "float,class:^(Slack)$" # slack desktop is such a headache
         "float,class:^(.telegram-desktop-wrapped)$"
         "float,class:^(org.telegram.desktop)$"
       ];

@@ -41,14 +41,14 @@
           # home-manager as NixOS module
           home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.oar = import ./home-manager/oar.nix;
-            # home-manager.users.oar.nixpkgs.config.allowUnfreePredicate = _: true; 
-
-            # Optionally, use home-manager.extraSpecialArgs to pass
-            # arguments to home.nix
-            home-manager.extraSpecialArgs = {inherit inputs;};
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.oar = import ./home-manager/oar.nix;
+              # Optionally, use home-manager.extraSpecialArgs to pass
+              # TODO: why have to use inherit
+              extraSpecialArgs = {inherit inputs;};
+            };
           }
         ];
       };
@@ -60,11 +60,14 @@
 
           home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.tila = import ./home-manager/tila.nix;
-
-            home-manager.extraSpecialArgs = inputs;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.tila = import ./home-manager/tila.nix;
+              # Optionally, use home-manager.extraSpecialArgs to pass
+              # TODO: why have to use inherit
+              extraSpecialArgs = {inherit inputs;};
+            };
           }
         ];
       };

@@ -68,15 +68,6 @@
 
   # Custom system wide programs
   # ---------------------------
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    vim # The Nano editor is also installed by default.
-    wget
-    curl
-    git
-  ];
   
   # Use the systemd-boot EFI bootloader.
   boot.loader = {
@@ -84,29 +75,17 @@
     efi.canTouchEfiVariables = true;
   };
 
-  networking = {
-    # Volatile: Set your hostname
-    hostName = "EnvySea";
-    networkmanager.enable = true;
+  # List packages installed in system profile. To search, run:
+  environment = {
+    systemPackages = with pkgs; [
+      vim # The Nano editor is also installed by default.
+      wget
+      curl
+      git
+    ];
+    variables.EDITOR = "vim"; # Set the default editor to vim
+    sessionVariables = {}; # Set in home manager could be better
   };
-
-  hardware.bluetooth = {
-    enable = true; # enables support for Bluetooth
-    powerOnBoot = true; # powers up the default Bluetooth controller on boot
-    settings = {
-      General = {
-        Experimental = true; # Watch out for bugs
-      };
-    };
-  };
-
-  services.blueman.enable = true;
-
-  # TimeZone
-  time.timeZone = "America/Los_Angeles";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
 
   fonts.packages = with pkgs; [
     noto-fonts
@@ -117,27 +96,132 @@
     (nerdfonts.override {fonts = ["JetBrainsMono"];})
   ];
 
-  # Display manager
-  programs.hyprland.enable = true;
-
-  # Enable hyprlock to use PAM
-  security.pam.services.hyprlock = {};
-
-  # Enable sound.
-  # https://nixos.wiki/wiki/PipeWire
-  security.rtkit.enable = true; # TODO: Dig a bit more about this
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.extraConfig = {
-      "monitor.bluez.properties" = {
-        "bluez5.enable-sbc-xq" = true;
-        "bluez5.enable-msbc" = true;
-        "bluez5.enable-hw-volume" = true;
-        "bluez5.roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+  hardware.bluetooth = {
+    enable = true; # enables support for Bluetooth
+    powerOnBoot = true; # powers up the default Bluetooth controller on boot
+    settings = {
+      General = {
+        Experimental = true; # Enable bat reporting; Watch out for bugs
       };
+    };
+  };
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  networking = {
+    # VOLATILE: Set your hostname
+    hostName = "EnvySea";
+    networkmanager.enable = true;
+  };
+
+  programs = {
+    # https://nixos.wiki/wiki/firejail
+    # Finally, hopefully this can be merged
+    # https://github.com/nix-community/home-manager/issues/4763
+    firejail = {
+      enable = true;
+      wrappedBinaries = {
+        mpv = {
+          executable = "${lib.getBin pkgs.mpv}/bin/mpv";
+          profile = "${pkgs.firejail}/etc/firejail/mpv.profile";
+        };
+        slack = {
+          executable = "${lib.getBin pkgs.slack}/bin/slack";
+          profile = "${pkgs.firejail}/etc/firejail/slack.profile";
+          extraArgs = [ "--env=GTK_THEME=Adwaita:dark" ];
+        };
+        telegram-desktop = {
+          executable = "${lib.getBin pkgs.tdesktop}/bin/telegram-desktop";
+          profile = "${pkgs.firejail}/etc/firejail/telegram-desktop.profile";
+        };
+        zoom = {
+          executable = "${lib.getBin pkgs.zoom-us}/bin/zoom";
+          profile = "${pkgs.firejail}/etc/firejail/zoom.profile";
+        };
+        # chromium = {
+        #   executable = "${lib.getBin pkgs.ungoogled-chromium}/bin/chromium";
+        #   profile = "${pkgs.firejail}/etc/firejail/chromium-browser.profile";
+        # };
+      # End of wrappedBinaries
+      };
+    };
+    # DE
+    hyprland.enable = true;
+    # Enable network monitoring
+    iftop.enable = true;
+    wireshark.enable = true;
+    # End of program
+  };
+
+  security = {
+    rtkit.enable = true; # Bluetooth realtime kit
+    pam.services.hyprlock = {}; # Enable hyprlock to use PAM
+    # app security
+    apparmor = {
+      enable = true;
+      packages = with pkgs; [
+        apparmor-utils
+        apparmor-profiles
+      ];
+    };
+    sudo.wheelNeedsPassword = false; # NoPasswd needed for wheel
+    # End of security
+  };
+
+  services = {
+    blueman.enable = true;
+    # Sound
+    # TODO: Bluetooth hfp still not working properly
+    pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+      wireplumber.extraConfig = {
+        "monitor.bluez.properties" = {
+          "bluez5.enable-sbc-xq" = true;
+          "bluez5.enable-msbc" = true;
+          "bluez5.enable-hw-volume" = true;
+          "bluez5.roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+        };
+      };
+    };
+    # USB mounting support
+    devmon.enable = true;
+    gvfs.enable = true; 
+    udisks2.enable = true;
+    # Enable laptop bat auto-tune
+    # powerManagement.powertop.enable = true;
+    tlp.enable = true;
+    # End services
+  };
+
+  # TimeZone
+  time.timeZone = "America/Los_Angeles";
+
+  # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
+  users.users = {
+    # giant oarfish
+    oar = {
+      # VOLATILE: You can set an initial password for your user.
+      # If you do, you can skip setting a root password by passing '--no-root-passwd' to nixos-install.
+      # Be sure to change it (using passwd) after rebooting!
+      # initialPassword = "correcthorsebatterystaple";
+      isNormalUser = true;
+      # openssh.authorizedKeys.keys = [
+        # "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAoj8qO2mdeopNwZQohpiuYnFN+P2Cb5dtOLvCultWg/ user"
+      # ];
+      # VOLATILE: Be sure to add any other groups you need (such as networkmanager, etc)
+      extraGroups = ["wheel" "networkmanager" "wireshark"];
+    };
+  };
+
+  virtualisation.docker = {
+    enable = true;
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
     };
   };
 
@@ -151,75 +235,6 @@
   #     source = "${pkgs.iputils.out}/bin/nethogs";
   #   };
   # };
-  # programs.firejail = {
-  #   enable = true;
-  #   wrappedBinaries = {
-  #     slack = {
-  #       executable = "${lib.getBin pkgs.slack}/bin/slack";
-  #       profile = "${pkgs.firejail}/etc/firejail/slack.profile";
-  #     };
-  #     telegram-desktop = {
-  #       executable = "${lib.getBin pkgs.tdesktop}/bin/telegram-desktop";
-  #       profile = "${pkgs.firejail}/etc/firejail/telegram-desktop.profile";
-  #     };
-  #     mpv = {
-  #       executable = "${lib.getBin pkgs.mpv}/bin/mpv";
-  #       profile = "${pkgs.firejail}/etc/firejail/mpv.profile";
-  #     };
-  #     zoom = {
-  #       executable = "${lib.getBin pkgs.mpv}/bin/zoom";
-  #       profile = "${pkgs.firejail}/etc/firejail/zoom.profile";
-  #     };
-  #   };
-  # };
-
-  # Set the default editor to vim
-  environment.variables.EDITOR = "vim";
-
-  environment.sessionVariables = {
-    # Set in home manager if possible
-  };
-
-  # NoPasswd needed for wheel
-  security.sudo.wheelNeedsPassword = false;
-
-  # Enable powertop auto-tune
-  # powerManagement.powertop.enable = true;
-  services.tlp.enable = true;
-
-  # Enable network monitoring
-  programs.iftop.enable = true;
-  programs.wireshark.enable = true;
-
-  # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
-  users.users = {
-    # giant oarfish
-    oar = {
-      # TODO: You can set an initial password for your user.
-      # If you do, you can skip setting a root password by passing '--no-root-passwd' to nixos-install.
-      # Be sure to change it (using passwd) after rebooting!
-      # initialPassword = "correcthorsebatterystaple";
-      isNormalUser = true;
-      # openssh.authorizedKeys.keys = [
-        # "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAoj8qO2mdeopNwZQohpiuYnFN+P2Cb5dtOLvCultWg/ user"
-      # ];
-      # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
-      extraGroups = ["wheel" "networkmanager" "wireshark"];
-    };
-  };
-
-  virtualisation.docker = {
-    enable = true;
-    rootless = {
-      enable = true;
-      setSocketVariable = true;
-    };
-  };
-
-  # USB mounting support
-  services.devmon.enable = true;
-  services.gvfs.enable = true; 
-  services.udisks2.enable = true;
 
   # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.

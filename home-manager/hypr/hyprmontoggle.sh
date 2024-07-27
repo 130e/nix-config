@@ -27,7 +27,7 @@ move_all_workspaces_to_monitor() {
 
 # TODO: Detect these instead of hardcoding them
 INTERNAL_MONITOR="eDP-1"
-EXTERNAL_MONITOR="HDMI-A-1"
+# EXTERNAL_MONITOR="HDMI-A-1"
 
 NUM_MONITORS=$(hyprctl monitors all | grep --count Monitor)
 NUM_MONITORS_ACTIVE=$(hyprctl monitors | grep --count Monitor)
@@ -45,6 +45,13 @@ fi
 
 # For dynamically toggling which monitor is active later via a keybind
 if [ "$NUM_MONITORS" -gt 1 ]; then # Handling multiple monitors
+	# Dirty hack
+	if hyprctl monitors | cut --delimiter ' ' --fields 2 | grep --quiet "HDMI-A-1"; then
+		EXTERNAL_MONITOR="HDMI-A-1"
+	elif hyprctl monitors | cut --delimiter ' ' --fields 2 | grep --quiet "DP-1"; then
+		EXTERNAL_MONITOR="DP-1"
+	fi
+
 	if hyprctl monitors | cut --delimiter ' ' --fields 2 | grep --quiet ^$INTERNAL_MONITOR; then
 		hyprctl keyword monitor $EXTERNAL_MONITOR,preferred,0x0,1
 		# move_all_workspaces_to_monitor $EXTERNAL_MONITOR

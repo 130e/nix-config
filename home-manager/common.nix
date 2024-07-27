@@ -122,11 +122,6 @@
     };
   };
 
-  # https://wiki.nixos.org/wiki/MPV
-  programs.mpv = {
-    enable = true;
-  };
-
   # Services
   # -------------------------------
 

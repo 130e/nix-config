@@ -8,6 +8,7 @@
   ];
 
   programs = {
+    # Not sure emptyDirectory would work here
     chromium = {
       enable = true;
       # [Bug] chromium does not respect NIXOS_OZONE_WL=1
@@ -16,9 +17,33 @@
         "--enable-wayland-ime"
       ];
       package = pkgs.ungoogled-chromium;
+      extensions = [
+        # How to fetch crx url
+        # curl -Lo /dev/null -w '%{url_effective}\n' 'https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&acceptformat=crx3&x=id%3D''EXT_ID_GOES_HERE''%26installsource%3Dondemand%26uc'
+        # This part is static. Need to manually update extensions
+        # uBlock Origin
+        {
+          id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
+          version = "1.58.0";
+          crxPath = builtins.fetchurl {
+            url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGivjvqM7c6ZTIGSqAHOrOA78anTtk30nNqUW1_blKEujiTw23yddTYyaayltPFYllgCtittddTj6mpJpoez7YmHw3QgomBqUptiiZewlLtVB-aYIfEZ012mvZWRWA_eAMZSmuXsad8B-ntbaEaPnBZ4y8Ume-gfYw/CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_58_0_0.crx";
+            sha256 = "sha256:746a98572d2ae68e1040abc0bdb1926c168191965c53ef571617633428497306";
+          };
+        }
+        # vimium
+        {
+          id = "dbepggeogbaibhgnhhndojpepiihcmeb";
+          version = "2.1.2";
+          crxPath = builtins.fetchurl {
+            url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGjxj7oB6lhOoScED_U6UzhzkB6nzTgU813UcfuqvdPXcYR38oQXe1Wdk6mduJwfGzMaKTsIW-TUfZkoDoRZTxAOGjoai8w5Tmd5-8pwnmZWNXmUSBdqeHYBRXzHtsQAxlKa5dQpCeiloPaF4LV7-T0quT7N75za/DBEPGGEOGBAIBHGNHHNDOJPEPIIHCMEB_2_1_2_0.crx";
+            sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
+          };
+        }
+      ];
     };
 
     librewolf = {
+      # package = pkgs.emptyDirectory; # firejail install it for us
       enable = true;
       # Enable WebGL, cookies and history
       settings = {
@@ -63,7 +88,6 @@
     packages = with pkgs; [
       # Apps
       telegram-desktop
-      slack
       xfce.thunar
       keepassxc
       steam-run
@@ -182,6 +206,46 @@
         StartupWMClass="Slack";
       };
     };
+
+    # "brave-browser" = {
+    #   name = "Brave Web Browser";
+    #   comment = "Access the Internet";
+    #   genericName = "Web Browser";
+    #   exec = "brave --enable-features=UseOzonePlatform --enable-wayland-ime %U";
+    #   icon="brave-browser";
+    #   terminal=false;
+    #   type="Application";
+    #   startupNotify=true;
+    #   categories=["Network" "WebBrowser"];
+    #   mimeType=[
+    #     "application/pdf"
+    #     "application/rdf+xml"
+    #     "application/rss+xml"
+    #     "application/xhtml+xml"
+    #     "application/xhtml_xml"
+    #     "application/xml"
+    #     "image/gif"
+    #     "image/jpeg"
+    #     "image/png"
+    #     "image/webp"
+    #     "text/html"
+    #     "text/xml"
+    #     "x-scheme-handler/http"
+    #     "x-scheme-handler/https"
+    #     "x-scheme-handler/ipfs"
+    #     "x-scheme-handler/ipns"
+    #   ];
+    #   actions = {
+    #     "new-window" = {
+    #       exec="brave --enable-features=UseOzonePlatform --enable-wayland-ime";
+    #       name="New Window";
+    #     };
+    #     "new-private-window" = {
+    #       exec="brave --enable-features=UseOzonePlatform --enable-wayland-ime --incognito";
+    #       name="New Incognito Window";
+    #     };
+    #   };
+    # };
   # End of xdg desktopEntries 
   };
   # End of config
