@@ -127,22 +127,37 @@
           profile = "${pkgs.firejail}/etc/firejail/mpv.profile";
         };
         slack = {
-          executable = "${lib.getBin pkgs.slack}/bin/slack";
+          executable = "${lib.getBin pkgs.slack}/bin/slack --enable-features=UseOzonePlatform --enable-wayland-ime";
           profile = "${pkgs.firejail}/etc/firejail/slack.profile";
           extraArgs = [ "--env=GTK_THEME=Adwaita:dark" ];
         };
         telegram-desktop = {
-          executable = "${lib.getBin pkgs.tdesktop}/bin/telegram-desktop";
+          executable = "${lib.getBin pkgs.tdesktop}/bin/telegram-desktop --use-tray-icon --enable-features=UseOzonePlatform --enable-wayland-ime";
           profile = "${pkgs.firejail}/etc/firejail/telegram-desktop.profile";
+          extraArgs = [
+            "--env=GTK_THEME=Adwaita:dark" # Enforce dark mode
+            "--dbus-user.talk=org.kde.StatusNotifierWatcher" # Allow tray icon (should be upstreamed into signal-desktop.profile)
+            "--dbus-user.talk=org.fcitx.Fcitx5" # TODO: look into this workaround
+          ];
         };
         zoom = {
           executable = "${lib.getBin pkgs.zoom-us}/bin/zoom";
           profile = "${pkgs.firejail}/etc/firejail/zoom.profile";
         };
-        # chromium = {
-        #   executable = "${lib.getBin pkgs.ungoogled-chromium}/bin/chromium";
-        #   profile = "${pkgs.firejail}/etc/firejail/chromium-browser.profile";
-        # };
+        brave = {
+          executable = "${lib.getBin pkgs.brave}/bin/brave --enable-features=UseOzonePlatform --enable-wayland-ime";
+          profile = "${pkgs.firejail}/etc/firejail/brave.profile";
+        };
+        librewolf = {
+          executable = "${lib.getBin pkgs.librewolf}/bin/librewolf";
+          profile = "${pkgs.firejail}/etc/firejail/librewolf.profile";
+          extraArgs = [
+            "--dbus-user.talk=org.fcitx.Fcitx5" # TODO: look into this workaround
+            # "--env=GTK_IM_MODULE=fcitx"
+            # "--env=QT_IM_MODULE=fcitx"
+            # "--env=XMODIFIERS=@im=fcitx"
+          ];
+        };
       # End of wrappedBinaries
       };
     };

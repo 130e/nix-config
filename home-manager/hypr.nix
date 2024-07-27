@@ -102,29 +102,43 @@
         ",preferred,auto,auto"
       ];
       env = [ "XDG_PICTURES_DIR,$HOME/Picture/Screenshot" ];
+      "$terminal" = "kitty";
+      "$fileManager" = "thunar";
+      "$menu" = "wofi --show drun -I";
+      "$chromium-browser" = "brave";
+      "$gecko-browser" = "librewolf";
       exec-once = [
         "waybar"
         "swww-daemon"
         "hyprctl setcursor Bibata-Modern-Ice 24"
-        "[workspace 1 silent] kitty"
-        "[workspace 2 silent] chromium"
-        "[workspace 10 silent] kitty --hold bash -c 'btop'"
+        "[workspace 1 silent] $terminal"
+        "[workspace 2 silent] $chromium-browser"
+        "[workspace 10 silent] $terminal --hold bash -c 'btop'"
+        "[workspace special:magic silent] telegram-desktop"
+        "[workspace special:magic silent] slack"
       ];
       "$mainMod" = "SUPER";
       bind = [
         "$mainMod SHIFT, T, exec, hyprmontoggle"
+
+        "$mainMod, Return, exec, $terminal"
+        "$mainMod, C, killactive,"
+        "$mainMod SHIFT, M, exit,"
+        "$mainMod, E, exec, $fileManager"
+        "$mainMod, D, exec, $gecko-browser"
+        "$mainMod, B, exec, $chromium-browser"
       ];
       windowrulev2 = [
         "suppressevent maximize, class:.*" # You'll probably like this.
         "float,class:^(chromium)$"
+        "float,class:^([tT]hunar)$"
         "float,class:^(librewolf)$,title:^(Library)$"
-        "float,class:^(thunar)$"
         "float,class:^(fcitx5-config.*)$"
         "float,class:^(.*blueman-manager.*)$"
         "float,class:^(.*qpwgraph)$"
         "float,class:^(pavucontrol)$"
         "float,initialClass:^(mpv)$"
-        "float,class:^(Slack)$" # slack desktop is such a headache
+        "float,class:^([sS]lack)$"
         "float,class:^(.telegram-desktop-wrapped)$"
         "float,class:^(org.telegram.desktop)$"
       ];

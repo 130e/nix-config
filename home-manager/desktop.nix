@@ -8,52 +8,53 @@
   ];
 
   programs = {
-    # Not sure emptyDirectory would work here
-    chromium = {
+    zathura = {
       enable = true;
-      # [Bug] chromium does not respect NIXOS_OZONE_WL=1
-      commandLineArgs = [
-        "--enable-features=UseOzonePlatform"
-        "--enable-wayland-ime"
-      ];
-      package = pkgs.ungoogled-chromium;
-      extensions = [
-        # How to fetch crx url
-        # curl -Lo /dev/null -w '%{url_effective}\n' 'https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&acceptformat=crx3&x=id%3D''EXT_ID_GOES_HERE''%26installsource%3Dondemand%26uc'
-        # This part is static. Need to manually update extensions
-        # uBlock Origin
-        {
-          id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
-          version = "1.58.0";
-          crxPath = builtins.fetchurl {
-            url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGivjvqM7c6ZTIGSqAHOrOA78anTtk30nNqUW1_blKEujiTw23yddTYyaayltPFYllgCtittddTj6mpJpoez7YmHw3QgomBqUptiiZewlLtVB-aYIfEZ012mvZWRWA_eAMZSmuXsad8B-ntbaEaPnBZ4y8Ume-gfYw/CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_58_0_0.crx";
-            sha256 = "sha256:746a98572d2ae68e1040abc0bdb1926c168191965c53ef571617633428497306";
-          };
-        }
-        # vimium
-        {
-          id = "dbepggeogbaibhgnhhndojpepiihcmeb";
-          version = "2.1.2";
-          crxPath = builtins.fetchurl {
-            url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGjxj7oB6lhOoScED_U6UzhzkB6nzTgU813UcfuqvdPXcYR38oQXe1Wdk6mduJwfGzMaKTsIW-TUfZkoDoRZTxAOGjoai8w5Tmd5-8pwnmZWNXmUSBdqeHYBRXzHtsQAxlKa5dQpCeiloPaF4LV7-T0quT7N75za/DBEPGGEOGBAIBHGNHHNDOJPEPIIHCMEB_2_1_2_0.crx";
-            sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
-          };
-        }
-      ];
-    };
-
-    librewolf = {
-      # package = pkgs.emptyDirectory; # firejail install it for us
-      enable = true;
-      # Enable WebGL, cookies and history
-      settings = {
-        "webgl.disabled" = false;
-        "privacy.resistFingerprinting" = false;
-        "privacy.clearOnShutdown.history" = false;
-        "privacy.clearOnShutdown.cookies" = false;
-        "network.cookie.lifetimePolicy" = 0;
+      options = {
+        recolor = false; # do not recolor by default
+        recolor-darkcolor = "#dcd7ba";
+        recolor-lightcolor = "#1f1f28";
+        recolor-keephue = true;
       };
     };
+
+    # chromium = {
+    #   enable = true;
+    #   # [Bug] chromium does not respect NIXOS_OZONE_WL=1
+    #   commandLineArgs = [
+    #     "--enable-features=UseOzonePlatform"
+    #     "--enable-wayland-ime"
+    #   ];
+    #   package = pkgs.ungoogled-chromium;
+    #   extensions = [
+    #     # How to fetch crx url
+    #     # curl -Lo /dev/null -w '%{url_effective}\n' 'https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&acceptformat=crx3&x=id%3D''EXT_ID_GOES_HERE''%26installsource%3Dondemand%26uc'
+    #
+    #     # TODO: Try this suggested method when have time. https://ungoogled-software.github.io/ungoogled-chromium-wiki/faq#can-i-install-extensions-or-themes-from-the-chrome-webstore
+    #     # https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=[VERSION]&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
+    #     # Fill in VERSION and EXTENSION_ID
+    #
+    #     # Static declare extension. Need manually updating
+    #     # uBlock Origin
+    #     {
+    #       id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
+    #       version = "1.58.0";
+    #       crxPath = builtins.fetchurl {
+    #         url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGivjvqM7c6ZTIGSqAHOrOA78anTtk30nNqUW1_blKEujiTw23yddTYyaayltPFYllgCtittddTj6mpJpoez7YmHw3QgomBqUptiiZewlLtVB-aYIfEZ012mvZWRWA_eAMZSmuXsad8B-ntbaEaPnBZ4y8Ume-gfYw/CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_58_0_0.crx";
+    #         sha256 = "sha256:746a98572d2ae68e1040abc0bdb1926c168191965c53ef571617633428497306";
+    #       };
+    #     }
+    #     # vimium
+    #     {
+    #       id = "dbepggeogbaibhgnhhndojpepiihcmeb";
+    #       version = "2.1.2";
+    #       crxPath = builtins.fetchurl {
+    #         url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGjxj7oB6lhOoScED_U6UzhzkB6nzTgU813UcfuqvdPXcYR38oQXe1Wdk6mduJwfGzMaKTsIW-TUfZkoDoRZTxAOGjoai8w5Tmd5-8pwnmZWNXmUSBdqeHYBRXzHtsQAxlKa5dQpCeiloPaF4LV7-T0quT7N75za/DBEPGGEOGBAIBHGNHHNDOJPEPIIHCMEB_2_1_2_0.crx";
+    #         sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
+    #       };
+    #     }
+    #   ];
+    # };
 
     # qutebrowser = {
     #   enable = true;
@@ -72,22 +73,12 @@
     #   '';
     # };
 
-    zathura = {
-      enable = true;
-      options = {
-        recolor = false; # do not recolor by default
-        recolor-darkcolor = "#dcd7ba";
-        recolor-lightcolor = "#1f1f28";
-        recolor-keephue = true;
-      };
-    };
-
+  # End programs
   };
 
   home = {
     packages = with pkgs; [
       # Apps
-      telegram-desktop
       xfce.thunar
       keepassxc
       steam-run
@@ -157,17 +148,21 @@
   # };
 
   services = {
-    blueman-applet.enable = true;
+    blueman-applet.enable = true; # bluetooth gui
     mpris-proxy.enable = true; # enable earbud control
-    playerctld.enable = true;
+    playerctld.enable = true; # enable media key
   };
 
   # [Optional] If you want to create/modify a desktop entry
+  # Copy-paste and modify desktop entries here beacause:
+  # 1) If app are installed by firejail, no desktop entry installed
+  # 2) If not firejail, electro app need wayland argument 
   xdg.desktopEntries = {
     "org.telegram.desktop" = {
       name = "Telegram Desktop";
       comment = "Official desktop version of Telegram messaging app";
-      exec = "telegram-desktop --enable-features=UseOzonePlatform --enable-wayland-ime -- %u";
+      exec = "telegram-desktop -- %u";
+      # exec = "telegram-desktop --enable-features=UseOzonePlatform --enable-wayland-ime -- %u";
       icon="telegram";
       terminal=false;
       type="Application";
@@ -195,7 +190,8 @@
       name = "Slack";
       comment = "Slack Desktop";
       genericName = "Slack Client for Linux";
-      exec = "slack --enable-features=UseOzonePlatform --enable-wayland-ime -s %U";
+      exec = "slack -s %U";
+      # exec = "slack --enable-features=UseOzonePlatform --enable-wayland-ime -s %U";
       icon="slack";
       terminal=false;
       type="Application";
@@ -207,45 +203,81 @@
       };
     };
 
-    # "brave-browser" = {
-    #   name = "Brave Web Browser";
-    #   comment = "Access the Internet";
-    #   genericName = "Web Browser";
-    #   exec = "brave --enable-features=UseOzonePlatform --enable-wayland-ime %U";
-    #   icon="brave-browser";
-    #   terminal=false;
-    #   type="Application";
-    #   startupNotify=true;
-    #   categories=["Network" "WebBrowser"];
-    #   mimeType=[
-    #     "application/pdf"
-    #     "application/rdf+xml"
-    #     "application/rss+xml"
-    #     "application/xhtml+xml"
-    #     "application/xhtml_xml"
-    #     "application/xml"
-    #     "image/gif"
-    #     "image/jpeg"
-    #     "image/png"
-    #     "image/webp"
-    #     "text/html"
-    #     "text/xml"
-    #     "x-scheme-handler/http"
-    #     "x-scheme-handler/https"
-    #     "x-scheme-handler/ipfs"
-    #     "x-scheme-handler/ipns"
-    #   ];
-    #   actions = {
-    #     "new-window" = {
-    #       exec="brave --enable-features=UseOzonePlatform --enable-wayland-ime";
-    #       name="New Window";
-    #     };
-    #     "new-private-window" = {
-    #       exec="brave --enable-features=UseOzonePlatform --enable-wayland-ime --incognito";
-    #       name="New Incognito Window";
-    #     };
-    #   };
-    # };
+    "brave-browser" = {
+      name = "Brave Web Browser";
+      comment = "Access the Internet";
+      genericName = "Web Browser";
+      exec = "brave %U";
+      icon="brave-browser";
+      terminal=false;
+      type="Application";
+      startupNotify=true;
+      categories=["Network" "WebBrowser"];
+      mimeType=[
+        "application/pdf"
+        "application/rdf+xml"
+        "application/rss+xml"
+        "application/xhtml+xml"
+        "application/xhtml_xml"
+        "application/xml"
+        "image/gif"
+        "image/jpeg"
+        "image/png"
+        "image/webp"
+        "text/html"
+        "text/xml"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+        "x-scheme-handler/ipfs"
+        "x-scheme-handler/ipns"
+      ];
+      actions = {
+        "new-window" = {
+          exec="brave";
+          name="New Window";
+        };
+        "new-private-window" = {
+          exec="brave --incognito";
+          name="New Incognito Window";
+        };
+      };
+    };
+
+    "librewolf" = {
+      name = "Librewolf";
+      genericName = "Web Browser";
+      exec = "librewolf --name librewolf %U";
+      icon="librewolf";
+      terminal=false;
+      type="Application";
+      startupNotify=true;
+      categories=["Network" "WebBrowser"];
+      settings = {
+        StartupWMClass="librewolf";
+      };
+      mimeType=[
+        "text/html"
+        "text/xml"
+        "application/xhtml+xml"
+        "application/vnd.mozilla.xul+xml"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+      ];
+      actions = {
+        "new-window" = {
+          exec="librewolf --new-window %U";
+          name="New Window";
+        };
+        "new-private-window" = {
+          exec="librewolf --private-window %U";
+          name="New Private Window";
+        };
+        "profile-manager-window" = {
+          exec="librewolf --ProfileManager";
+          name="Profile Manager";
+        };
+      };
+    };
   # End of xdg desktopEntries 
   };
   # End of config
