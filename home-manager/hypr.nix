@@ -120,6 +120,8 @@
       "$mainMod" = "SUPER";
       bind = [
         "$mainMod SHIFT, T, exec, hyprmontoggle"
+        # lock screen
+        "$mainMod SHIFT, P, exec, loginctl lock-session"
 
         "$mainMod, Return, exec, $terminal"
         "$mainMod, C, killactive,"
@@ -127,11 +129,28 @@
         "$mainMod, E, exec, $fileManager"
         "$mainMod, D, exec, $gecko-browser"
         "$mainMod, B, exec, $chromium-browser"
+
+        # Example special workspace (scratchpad)
+        "$mainMod, Q, togglespecialworkspace, magic"
+        "$mainMod SHIFT, Q, movetoworkspace, special:magic"
+
+        # Move focus with mainMod + vim keys
+        "$mainMod, H, movefocus, l"
+        "$mainMod, L, movefocus, r"
+        "$mainMod, K, movefocus, u"
+        "$mainMod, J, movefocus, d"
+
+        # Scroll through existing workspaces with mainMod + scroll
+        # [Flavor] I reversed it because I use natural_scroll
+        "$mainMod, mouse_down, workspace, e-1"
+        "$mainMod, mouse_up, workspace, e+1"
+        "$mainMod, comma, workspace, e-1"
+        "$mainMod, period, workspace, e+1"
       ];
       windowrulev2 = [
         "suppressevent maximize, class:.*" # You'll probably like this.
         "float,class:^(chromium)$"
-        "float,class:^([tT]hunar)$"
+        "float,size 100% 100%,class:^([tT]hunar)$"
         "float,class:^(librewolf)$,title:^(Library)$"
         "float,class:^(fcitx5-config.*)$"
         "float,class:^(.*blueman-manager.*)$"
@@ -139,8 +158,11 @@
         "float,class:^(pavucontrol)$"
         "float,initialClass:^(mpv)$"
         "float,class:^([sS]lack)$"
-        "float,class:^(.telegram-desktop-wrapped)$"
         "float,class:^(org.telegram.desktop)$"
+        "float,class:^(org.keepassxc.KeePassXC)$"
+        "float,class:^(draw\.io)$"
+        "float,title:^((Open|Save|Choose) Files?)$" # general file select window
+        "float,class:^(spotube)$"
       ];
     };
   };

@@ -6,7 +6,9 @@
   config,
   pkgs,
   ...
-}: {
+}: let
+  user = "oar"; # giant oarfish
+in {
   # You can import other NixOS modules here
   imports = [
     # If you want to use modules from other flakes (such as nixos-hardware):
@@ -122,18 +124,18 @@
     firejail = {
       enable = true;
       wrappedBinaries = {
+        # NOTE: using default profile is already nicely handled by maintainer
+        # No need: profile = "${pkgs.firejail}/etc/firejail/slack.profile";
+        # https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/os-specific/linux/firejail/default.nix#L66
         mpv = {
           executable = "${lib.getBin pkgs.mpv}/bin/mpv";
-          profile = "${pkgs.firejail}/etc/firejail/mpv.profile";
         };
         slack = {
           executable = "${lib.getBin pkgs.slack}/bin/slack --enable-features=UseOzonePlatform --enable-wayland-ime";
-          profile = "${pkgs.firejail}/etc/firejail/slack.profile";
           extraArgs = [ "--env=GTK_THEME=Adwaita:dark" ];
         };
         telegram-desktop = {
           executable = "${lib.getBin pkgs.tdesktop}/bin/telegram-desktop --use-tray-icon --enable-features=UseOzonePlatform --enable-wayland-ime";
-          profile = "${pkgs.firejail}/etc/firejail/telegram-desktop.profile";
           extraArgs = [
             "--env=GTK_THEME=Adwaita:dark" # Enforce dark mode
             "--dbus-user.talk=org.kde.StatusNotifierWatcher" # Allow tray icon (should be upstreamed into signal-desktop.profile)
@@ -142,20 +144,20 @@
         };
         zoom = {
           executable = "${lib.getBin pkgs.zoom-us}/bin/zoom";
-          profile = "${pkgs.firejail}/etc/firejail/zoom.profile";
         };
         brave = {
           executable = "${lib.getBin pkgs.brave}/bin/brave --enable-features=UseOzonePlatform --enable-wayland-ime";
-          profile = "${pkgs.firejail}/etc/firejail/brave.profile";
         };
         librewolf = {
           executable = "${lib.getBin pkgs.librewolf}/bin/librewolf";
-          profile = "${pkgs.firejail}/etc/firejail/librewolf.profile";
           extraArgs = [
             "--dbus-user.talk=org.fcitx.Fcitx5" # TODO: look into this workaround
-            # "--env=GTK_IM_MODULE=fcitx"
-            # "--env=QT_IM_MODULE=fcitx"
-            # "--env=XMODIFIERS=@im=fcitx"
+          ];
+        };
+        drawio = {
+          executable = "${lib.getBin pkgs.drawio}/bin/drawio --enable-features=UseOzonePlatform --enable-wayland-ime";
+          extraArgs = [
+            "--whitelist=/home/${user}/box/work/drawio"
           ];
         };
       # End of wrappedBinaries
@@ -217,8 +219,7 @@
 
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
   users.users = {
-    # giant oarfish
-    oar = {
+    ${user} = {
       # VOLATILE: You can set an initial password for your user.
       # If you do, you can skip setting a root password by passing '--no-root-passwd' to nixos-install.
       # Be sure to change it (using passwd) after rebooting!

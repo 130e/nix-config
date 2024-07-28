@@ -11,7 +11,7 @@
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
-    ./desktop.nix
+    ./desktop.nix # Basically everything GUI
   ];
 
   # Custom programs
@@ -59,6 +59,7 @@
       confirm_os_window_close = 0;
       shell = "fish";
     };
+    # TODO: check and add more keybind  https://sw.kovidgoyal.net/kitty/shell-integration/
     shellIntegration = {
       enableBashIntegration = true;
       enableFishIntegration = true;
@@ -153,11 +154,6 @@
     nethogs
     wireshark-qt
     qtwirediff
-
-    # Fun stuff
-    # TODO: auto download piper sound resources 
-    # https://github.com/rhasspy/piper
-    piper-tts
   ];
 
   # Nicely reload system units when changing configs
