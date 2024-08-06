@@ -14,10 +14,13 @@
 
   home = {
     packages = with pkgs; [
-      hyprshot
+      # hyprshot
       hyprcursor
       libnotify
       (writeShellScriptBin "hyprmontoggle" (builtins.readFile ./hypr/hyprmontoggle.sh)) # Scrcipt for toggling monitor
+      grim
+      slurp
+      swappy
     ];
   };
 
@@ -129,6 +132,11 @@
         "$mainMod, E, exec, $fileManager"
         "$mainMod, D, exec, $gecko-browser"
         "$mainMod, B, exec, $chromium-browser"
+
+        # Screenshot
+        ''
+        $mainMod SHIFT, S, exec, grim -g "$(slurp)" - | swappy -f -
+        ''
 
         # Example special workspace (scratchpad)
         "$mainMod, Q, togglespecialworkspace, magic"

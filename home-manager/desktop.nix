@@ -18,44 +18,44 @@
       };
     };
 
-    # Browser are jailed; Watch for chance to declaratively use jail
-    # chromium = {
-    #   enable = true;
-    #   # [Bug] chromium does not respect NIXOS_OZONE_WL=1
-    #   commandLineArgs = [
-    #     "--enable-features=UseOzonePlatform"
-    #     "--enable-wayland-ime"
-    #   ];
-    #   package = pkgs.ungoogled-chromium;
-    #   extensions = [
-    #     # How to fetch crx url
-    #     # curl -Lo /dev/null -w '%{url_effective}\n' 'https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&acceptformat=crx3&x=id%3D''EXT_ID_GOES_HERE''%26installsource%3Dondemand%26uc'
-    #
-    #     # TODO: Try this suggested method when have time. https://ungoogled-software.github.io/ungoogled-chromium-wiki/faq#can-i-install-extensions-or-themes-from-the-chrome-webstore
-    #     # https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=[VERSION]&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
-    #     # Fill in VERSION and EXTENSION_ID
-    #
-    #     # Static declare extension. Need manually updating
-    #     # uBlock Origin
-    #     {
-    #       id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
-    #       version = "1.58.0";
-    #       crxPath = builtins.fetchurl {
-    #         url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGivjvqM7c6ZTIGSqAHOrOA78anTtk30nNqUW1_blKEujiTw23yddTYyaayltPFYllgCtittddTj6mpJpoez7YmHw3QgomBqUptiiZewlLtVB-aYIfEZ012mvZWRWA_eAMZSmuXsad8B-ntbaEaPnBZ4y8Ume-gfYw/CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_58_0_0.crx";
-    #         sha256 = "sha256:746a98572d2ae68e1040abc0bdb1926c168191965c53ef571617633428497306";
-    #       };
-    #     }
-    #     # vimium
-    #     {
-    #       id = "dbepggeogbaibhgnhhndojpepiihcmeb";
-    #       version = "2.1.2";
-    #       crxPath = builtins.fetchurl {
-    #         url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGjxj7oB6lhOoScED_U6UzhzkB6nzTgU813UcfuqvdPXcYR38oQXe1Wdk6mduJwfGzMaKTsIW-TUfZkoDoRZTxAOGjoai8w5Tmd5-8pwnmZWNXmUSBdqeHYBRXzHtsQAxlKa5dQpCeiloPaF4LV7-T0quT7N75za/DBEPGGEOGBAIBHGNHHNDOJPEPIIHCMEB_2_1_2_0.crx";
-    #         sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
-    #       };
-    #     }
-    #   ];
-    # };
+    # Keep ugl-chromium for running zoom only
+    chromium = {
+      enable = true;
+      # [Bug] chromium does not respect NIXOS_OZONE_WL=1
+      commandLineArgs = [
+        "--enable-features=UseOzonePlatform"
+        "--enable-wayland-ime"
+      ];
+      package = pkgs.ungoogled-chromium;
+      extensions = [
+        # How to fetch crx url
+        # curl -Lo /dev/null -w '%{url_effective}\n' 'https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&acceptformat=crx3&x=id%3D''EXT_ID_GOES_HERE''%26installsource%3Dondemand%26uc'
+
+        # TODO: Try this suggested method when have time. https://ungoogled-software.github.io/ungoogled-chromium-wiki/faq#can-i-install-extensions-or-themes-from-the-chrome-webstore
+        # https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=[VERSION]&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
+        # Fill in VERSION and EXTENSION_ID
+
+        # Static declare extension. Need manually updating
+        # uBlock Origin
+        {
+          id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
+          version = "1.58.0";
+          crxPath = builtins.fetchurl {
+            url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGivjvqM7c6ZTIGSqAHOrOA78anTtk30nNqUW1_blKEujiTw23yddTYyaayltPFYllgCtittddTj6mpJpoez7YmHw3QgomBqUptiiZewlLtVB-aYIfEZ012mvZWRWA_eAMZSmuXsad8B-ntbaEaPnBZ4y8Ume-gfYw/CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_58_0_0.crx";
+            sha256 = "sha256:746a98572d2ae68e1040abc0bdb1926c168191965c53ef571617633428497306";
+          };
+        }
+        # vimium
+        # {
+        #   id = "dbepggeogbaibhgnhhndojpepiihcmeb";
+        #   version = "2.1.2";
+        #   crxPath = builtins.fetchurl {
+        #     url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGjxj7oB6lhOoScED_U6UzhzkB6nzTgU813UcfuqvdPXcYR38oQXe1Wdk6mduJwfGzMaKTsIW-TUfZkoDoRZTxAOGjoai8w5Tmd5-8pwnmZWNXmUSBdqeHYBRXzHtsQAxlKa5dQpCeiloPaF4LV7-T0quT7N75za/DBEPGGEOGBAIBHGNHHNDOJPEPIIHCMEB_2_1_2_0.crx";
+        #     sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
+        #   };
+        # }
+      ];
+    };
 
     # qutebrowser = {
     #   enable = true;
@@ -79,6 +79,8 @@
 
   home = {
     packages = with pkgs; [
+      # desktop
+      xdg-utils
       # Apps
       xfce.thunar
       keepassxc
@@ -140,6 +142,7 @@
   };
 
   services = {
+    # network-manager-applet.enable = true;
     blueman-applet.enable = true; # bluetooth gui
     mpris-proxy.enable = true; # enable earbud control
     playerctld.enable = true; # enable media key
@@ -181,7 +184,7 @@
       "org.telegram.desktop" = {
         name = "Telegram Desktop";
         comment = "Official desktop version of Telegram messaging app";
-        exec = "telegram-desktop -- %u" use jail;
+        exec = "telegram-desktop -- %u";
         # exec = "telegram-desktop --enable-features=UseOzonePlatform --enable-wayland-ime -- %u";
         icon="telegram";
         terminal=false;
@@ -314,9 +317,22 @@
           StartupWMClass="draw.io";
         };
       };
-
     # End of xdg desktopEntries 
     };
+
+    mime.enable = true;
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "x-scheme-handler/http" = ["librewolf.desktop"];
+        "x-scheme-handler/https" = ["librewolf.desktop"];
+        "text/html" = ["librewolf.desktop"];
+        # "image/png" = ["swappy"]; # TODO: might need to add swappy as a desktop
+        "application/pdf" = ["org.pwmt.zathura-pdf-mupdf.desktop"];
+      };
+    };
+
+    portal.xdgOpenUsePortal = true;
   # End of xdg
   };
   # End of config

@@ -54,6 +54,8 @@ in {
       nix-path = config.nix.nixPath;
     };
 
+    # storage optimization https://nixos.wiki/wiki/Storage_optimization
+    optimise.automatic = true;
     gc = {
       automatic = true;
       dates = "weekly";
@@ -86,7 +88,6 @@ in {
       git
     ];
     variables.EDITOR = "vim"; # Set the default editor to vim
-    sessionVariables = {}; # Set in home manager could be better
   };
 
   fonts.packages = with pkgs; [
@@ -103,7 +104,7 @@ in {
     powerOnBoot = true; # powers up the default Bluetooth controller on boot
     settings = {
       General = {
-        Experimental = true; # Enable bat reporting; Watch out for bugs
+        Experimental = true; # Enable bat reporting
       };
     };
   };
@@ -142,9 +143,14 @@ in {
             "--dbus-user.talk=org.fcitx.Fcitx5" # TODO: look into this workaround
           ];
         };
-        zoom = {
-          executable = "${lib.getBin pkgs.zoom-us}/bin/zoom";
-        };
+        # zoom = {
+        #   executable = "${lib.getBin pkgs.zoom-us}/bin/zoom";
+        #   extraArgs = [
+        #     "--noblacklist=/home/${user}/.librewolf"
+        #     "--whitelist=/home/${user}/.librewolf/profiles.ini"
+        #     "--read-only=/home/${user}/.librewolf/profiles.ini"
+        #   ];
+        # };
         brave = {
           executable = "${lib.getBin pkgs.brave}/bin/brave --enable-features=UseOzonePlatform --enable-wayland-ime";
         };
@@ -233,11 +239,13 @@ in {
     };
   };
 
-  virtualisation.docker = {
-    enable = true;
-    rootless = {
+  virtualisation = {
+    docker = {
       enable = true;
-      setSocketVariable = true;
+      rootless = {
+        enable = true;
+        setSocketVariable = true;
+      };
     };
   };
 
