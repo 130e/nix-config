@@ -108,7 +108,7 @@
       "$terminal" = "kitty";
       "$fileManager" = "thunar";
       "$menu" = "wofi --show drun -I";
-      "$chromium-browser" = "brave";
+      "$chromium-browser" = "chromium";
       "$gecko-browser" = "librewolf";
       exec-once = [
         "waybar"
@@ -117,8 +117,8 @@
         "[workspace 1 silent] $terminal"
         "[workspace 2 silent] $chromium-browser"
         "[workspace 10 silent] $terminal --hold bash -c 'btop'"
-        "[workspace special:magic silent] telegram-desktop"
-        "[workspace special:magic silent] slack"
+        # "[workspace special:magic silent] telegram-desktop"
+        # "[workspace special:magic silent] slack"
       ];
       "$mainMod" = "SUPER";
       bind = [
