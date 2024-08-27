@@ -1,0 +1,192 @@
+{
+	"layer": "top",
+	"position": "top",
+
+	"modules-left": [
+		"hyprland/submap",
+		"hyprland/workspaces",
+		"custom/arrow10",
+		"hyprland/window"
+	],
+
+	"modules-right": [
+		"network",
+		"memory",
+		"cpu",
+		"temperature",
+		"battery",
+		"backlight",
+		"pulseaudio",
+		"tray",
+		"clock#date",
+		"clock#time"
+	],
+
+	// Modules
+
+	"battery": {
+		"interval": 10,
+		"states": {
+			"warning": 30,
+			"critical": 15
+		},
+		"format-time": "{H}:{M:02}",
+		"format": "{icon}  {capacity}% {time} {power:0.2f}W",
+		"format-charging": "  {capacity}% {time}",
+		"format-charging-full": "  {capacity}%",
+		"format-full": "{icon}  {capacity}%",
+		"format-icons": [
+			"",
+			"",
+			"",
+			"",
+			""
+		],
+		"tooltip": true 
+	},
+
+	"clock#time": {
+		"interval": 10,
+		"format": "{:%H:%M}",
+		"tooltip": false
+	},
+
+	"clock#date": {
+		"interval": 20,
+		"format": "{:%b %e %Y}",
+		"tooltip": false
+	},
+
+	"cpu": {
+	    "format": " {usage}%",
+		"interval": 2,
+		"tooltip": false,
+		"states": {
+			"warning": 70,
+			"critical": 90
+		}
+	},
+
+	"backlight": {
+		// "device": "acpi_video1",
+		"format": "{icon} {percent}%",
+		"format-icons": ["", ""],
+		"on-scroll-up": "brightnessctl set +5",
+		"on-scroll-down": "brightnessctl set 5-",
+		"on-click": "brightnessctl set 50%"
+	},
+
+	"memory": {
+		"interval": 5,
+		"format": " {used:0.1f}/{total:.0f}",
+		"states": {
+			"warning": 70,
+			"critical": 90
+		},
+		"tooltip": false
+	},
+
+	"network": {
+		"format": "⚠ Disabled",
+		"interval": 2,
+		"format-wifi": "  {signalStrength}% {essid}",
+		"format-alt": " {ifname}: {ipaddr}/{cidr}",
+		"format-ethernet": " {ifname}: {bandwidthDownBits} ↓↑ {bandwidthUpBits}",
+		"format-disconnected": "⚠ Disconnected",
+		"tooltip": false
+	},
+
+	"sway/mode": {
+		"format": "{}",
+		"tooltip": false
+	},
+
+	"hyprland/window": {
+		"format": "{title}",
+		"max-length": 90,
+		"tooltip": false,
+		"separate-outputs": true,
+		"rewrite": {
+			"(.*) - Chromium": "$1"
+		}
+	},
+
+	"hyprland/workspaces": {
+		"active-only": false,
+		"all-outputs": true,
+		// "persistent-workspaces": {},
+		// can add window-rewrite later, maybe I like it, but I kinda prefer the current setup
+		"show-special": false,
+		"sort-by": "number",
+		"disable-scroll": true,
+		"disable-scroll-wraparound": true,
+		"enable-bar-scroll": false,
+		"format": "{icon}",
+		"format-icons": {
+			"1": "1",
+			"2": "2",
+			"3": "3",
+			"4": "4",
+			"5": "5",
+			"6": "6",
+			"7": "7",
+			"8": "8",
+			"9": "9",
+			"10": ""
+		}
+	},
+
+	"hyprland/submap": {
+		"format": " {} ",
+		"max-length": 8,
+		"tooltip": true
+	},
+
+	"pulseaudio": {
+		"format": "{icon} {volume}%",
+		"format-bluetooth": "{icon}  {volume}%",
+		"format-muted": "󰝟",
+		"format-icons": {
+			"headphone": "",
+			"hands-free": "󱡏",
+			"headset": "",
+			"phone": "",
+			"portable": "",
+			"car": "",
+			"default": ["", ""]
+		},
+		"scroll-step": 1,
+		"on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+    "on-double-click": "pavucontrol",
+		"tooltip": false
+	},
+
+	"temperature": {
+	  "thermal-zone": 0,
+		"critical-threshold": 90,
+		"interval": 10,
+		"format": "{icon} {temperatureC}°C",
+		"format-icons": [
+			"",
+			"",
+			"",
+			"",
+			"",
+			"󰈸"
+		],
+		"tooltip": true
+	},
+
+	"tray": {
+		"icon-size": 18
+		//"spacing": 10
+	},
+
+    "idle_inhibitor": {
+      "format": "{icon}",
+      "format-icons": {
+        "activated": "󰛊 ",
+        "deactivated": "󰾫 ",
+      },
+    },
+}

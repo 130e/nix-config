@@ -165,8 +165,7 @@
       wget
       curl
       git
-      ripgrep
-      # Desktop
+      # Hyprland desktop
       hyprcursor
       libnotify
       #(writeShellScriptBin "hyprmontoggle" (builtins.readFile ./script/hyprmontoggle.sh)) # Scrcipt for toggling monitor
@@ -180,7 +179,7 @@
       slurp
       grimblast
       swappy
-      # Desktop apps
+      # Basic desktop apps
       librewolf
       kitty
       xfce.thunar
@@ -208,11 +207,13 @@
     hyprland.enable = true;
     hyprlock.enable = true;
     waybar.enable = true;
+
     neovim = {
       enable = true;
       defaultEditor = true;
       vimAlias = true;
     };
+
     steam = {
       enable = true;
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play

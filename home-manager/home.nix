@@ -94,8 +94,6 @@
 
   programs.btop.enable = true;
 
-  programs.helix.enable = true;
-
   # Home packages
   # --------------
 
@@ -106,7 +104,6 @@
     python3
     gcc
     gnumake
-    # cargo
 
     # archive
     zip
@@ -154,7 +151,6 @@
     #   };
     # # End spotifyd
     # };
-  # End services
   };
 
   # GTK and QT are configured here
@@ -201,32 +197,34 @@
       ];
       package = pkgs.ungoogled-chromium;
       extensions = [
-        # How to fetch crx url
+        # Method 1) get the crx url
         # curl -Lo /dev/null -w '%{url_effective}\n' 'https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&acceptformat=crx3&x=id%3D''EXT_ID_GOES_HERE''%26installsource%3Dondemand%26uc'
-
-        # TODO: Try this suggested method when have time. https://ungoogled-software.github.io/ungoogled-chromium-wiki/faq#can-i-install-extensions-or-themes-from-the-chrome-webstore
-        # https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=[VERSION]&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
-        # Fill in VERSION and EXTENSION_ID
+        # TODO: method 2 failed as fetched file contained illegal characters
+        # Method 2) Static config. Ref: https://ungoogled-software.github.io/ungoogled-chromium-wiki/faq#can-i-install-extensions-or-themes-from-the-chrome-webstore
+        # url = https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=[VERSION]&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
+        # Fill in chromium VERSION and EXTENSION_ID
+        
+        # Need manually updating checksum and version
 
         # Static declare extension. Need manually updating
         # uBlock Origin
-        #{
-        #  id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
-        #  version = "1.58.0";
-        #  crxPath = builtins.fetchurl {
-        #    url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGivjvqM7c6ZTIGSqAHOrOA78anTtk30nNqUW1_blKEujiTw23yddTYyaayltPFYllgCtittddTj6mpJpoez7YmHw3QgomBqUptiiZewlLtVB-aYIfEZ012mvZWRWA_eAMZSmuXsad8B-ntbaEaPnBZ4y8Ume-gfYw/CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_58_0_0.crx";
-        #    sha256 = "sha256:746a98572d2ae68e1040abc0bdb1926c168191965c53ef571617633428497306";
-        #  };
-        #}
-        ## vimium
-        #{
-        #  id = "dbepggeogbaibhgnhhndojpepiihcmeb";
-        #  version = "2.1.2";
-        #  crxPath = builtins.fetchurl {
-        #    url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGjxj7oB6lhOoScED_U6UzhzkB6nzTgU813UcfuqvdPXcYR38oQXe1Wdk6mduJwfGzMaKTsIW-TUfZkoDoRZTxAOGjoai8w5Tmd5-8pwnmZWNXmUSBdqeHYBRXzHtsQAxlKa5dQpCeiloPaF4LV7-T0quT7N75za/DBEPGGEOGBAIBHGNHHNDOJPEPIIHCMEB_2_1_2_0.crx";
-        #    sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
-        #  };
-        #}
+        {
+          id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
+          version = "1.59.0";
+          crxPath = builtins.fetchurl {
+            url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGg1apbLN50mmrm74N9Oyxy0U3TZRr5rWsT8t_VZfeExDoJSUTI2YXyRgqtTML8vRuFDsqx1O2LJDly9pJXEuoUnbeJBwNNwlWVKv_ai1dKqxVY6dmqgi7uB-DDlF93oAMZSmuUG7KBUSYKwdbgX2SH3AX6K1J2cLw/CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_59_0_0.crx";
+            sha256 = "sha256:37992b0b9aa7a6b94f4fdf1385e503f237a55cea593fd1c254e9c02dcc01671a";
+          };
+        }
+        # vimium
+        # {
+        #   id = "dbepggeogbaibhgnhhndojpepiihcmeb";
+        #   version = "2.1.2";
+        #   crxPath = builtins.fetchurl {
+        #     url = "https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=128.0&x=id%3Ddbepggeogbaibhgnhhndojpepiihcmeb%26installsource%3Dondemand%26uc";
+        #     sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
+        #   };
+        # }
       ];
     };
 
@@ -286,36 +284,36 @@
     #   # If you need copy kvantum theme from install folder
     #   "Kvantum/Catppuccin-Frappe-Blue".source = "${pkgs.catppuccin-kvantum}/share/Kvantum/Catppuccin-Frappe-Blue";
     # };
-    desktopEntries = {
-      "org.telegram.desktop" = {
-        name = "Telegram Desktop";
-        comment = "Official desktop version of Telegram messaging app";
-        # exec = "telegram-desktop -- %u";
-        exec = "telegram-desktop --enable-features=UseOzonePlatform --enable-wayland-ime -- %u";
-        icon="telegram";
-        terminal=false;
-        type="Application";
-        categories=["Chat" "Network" "InstantMessaging" "Qt"];
-        mimeType=["x-scheme-handler/tg"];
-        settings = {
-          TryExec = "telegram-desktop";
-          StartupWMClass="TelegramDesktop";
-          Keywords = "tg;chat;im;messaging;messenger;sms;tdesktop;";
-          DBusActivatable="true";
-          SingleMainWindow="true";
-          X-GNOME-UsesNotifications="true";
-          X-GNOME-SingleWindow="true";
-        };
-        actions = {
-          "quit" = {
-            exec="telegram-desktop -quit";
-            name="Quit Telegram";
-            icon="application-exit";
-          };
-        };
-      };
-    # End of xdg desktopEntries 
-    };
+
+    #desktopEntries = {
+    #  "org.telegram.desktop" = {
+    #    name = "Telegram Desktop";
+    #    comment = "Official desktop version of Telegram messaging app";
+    #    # exec = "telegram-desktop -- %u";
+    #    exec = "telegram-desktop --enable-features=UseOzonePlatform --enable-wayland-ime -- %u";
+    #    icon="telegram";
+    #    terminal=false;
+    #    type="Application";
+    #    categories=["Chat" "Network" "InstantMessaging" "Qt"];
+    #    mimeType=["x-scheme-handler/tg"];
+    #    settings = {
+    #      TryExec = "telegram-desktop";
+    #      StartupWMClass="TelegramDesktop";
+    #      Keywords = "tg;chat;im;messaging;messenger;sms;tdesktop;";
+    #      DBusActivatable="true";
+    #      SingleMainWindow="true";
+    #      X-GNOME-UsesNotifications="true";
+    #      X-GNOME-SingleWindow="true";
+    #    };
+    #    actions = {
+    #      "quit" = {
+    #        exec="telegram-desktop -quit";
+    #        name="Quit Telegram";
+    #        icon="application-exit";
+    #      };
+    #    };
+    #  };
+    #};
 
     mime.enable = true;
     mimeApps = {
