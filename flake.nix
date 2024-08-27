@@ -1,24 +1,13 @@
 {
-  description = "My weird Nix config";
+  description = "Nixos config";
 
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Home manager
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Nvchad
-    # nvchad-config = {
-    #   url = "git+https://codeberg.org/daniel_chesters/nvchad_config";
-    #   flake = false;
-    # };
-
-    # rice
-    # nixvim.url = "github:elythh/nixvim";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -32,44 +21,23 @@
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
+      # FIXME replace with your hostname
       EnvySea = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
         # > Our main nixos configuration file <
-        modules = [
-          ./nixos/EnvySea/configuration.nix
-
-          # home-manager as NixOS module
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.oar = import ./home-manager/oar.nix;
-              # Optionally, use home-manager.extraSpecialArgs to pass
-              # TODO: why have to use inherit
-              extraSpecialArgs = {inherit inputs;};
-            };
-          }
-        ];
+        modules = [./nixos/configuration.nix];
       };
+    };
 
-      IcySurface = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        modules = [
-          ./nixos/IcySurface/configuration.nix
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.tila = import ./home-manager/tila.nix;
-              # Optionally, use home-manager.extraSpecialArgs to pass
-              # TODO: why have to use inherit
-              extraSpecialArgs = {inherit inputs;};
-            };
-          }
-        ];
+    # Standalone home-manager configuration entrypoint
+    # Available through 'home-manager --flake .#your-username@your-hostname'
+    homeConfigurations = {
+      # FIXME replace with your username@hostname
+      "oar@EnvySea" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+        extraSpecialArgs = {inherit inputs outputs;};
+        # > Our main home-manager configuration file <
+        modules = [./home-manager/home.nix];
       };
     };
   };
