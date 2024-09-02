@@ -62,8 +62,7 @@
     vimAlias = true;
     vimdiffAlias = true;
     defaultEditor = true;
-    extraPackages = with pkgs; [
-    ];
+    # extraPackages = with pkgs; [ ];
     withNodeJs = true;
     withPython3 = true;
   };
@@ -135,7 +134,7 @@
   # ------------------------
   
   services = {
-    # network-manager-applet.enable = true;
+    network-manager-applet.enable = true;
     blueman-applet.enable = true; # bluetooth gui
     mpris-proxy.enable = true; # enable earbud control
     playerctld.enable = true; # enable media key
@@ -196,44 +195,69 @@
         "--enable-wayland-ime"
       ];
       package = pkgs.ungoogled-chromium;
-      extensions = [
-        # Method 1) get the crx url
-        # curl -Lo /dev/null -w '%{url_effective}\n' 'https://clients2.google.com/service/update2/crx?response=redirect&prodversion=49.0&acceptformat=crx3&x=id%3D''EXT_ID_GOES_HERE''%26installsource%3Dondemand%26uc'
-        # TODO: method 2 failed as fetched file contained illegal characters
-        # Method 2) Static config. Ref: https://ungoogled-software.github.io/ungoogled-chromium-wiki/faq#can-i-install-extensions-or-themes-from-the-chrome-webstore
-        # url = https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=[VERSION]&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
-        # Fill in chromium VERSION and EXTENSION_ID
-        
-        # Need manually updating checksum and version
-
-        # Static declare extension. Need manually updating
-        # uBlock Origin
-        {
-          id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
-          version = "1.59.0";
-          crxPath = builtins.fetchurl {
-            url = "https://clients2.googleusercontent.com/crx/blobs/AVsOOGg1apbLN50mmrm74N9Oyxy0U3TZRr5rWsT8t_VZfeExDoJSUTI2YXyRgqtTML8vRuFDsqx1O2LJDly9pJXEuoUnbeJBwNNwlWVKv_ai1dKqxVY6dmqgi7uB-DDlF93oAMZSmuUG7KBUSYKwdbgX2SH3AX6K1J2cLw/CJPALHDLNBPAFIAMEJDNHCPHJBKEIAGM_1_59_0_0.crx";
-            sha256 = "sha256:37992b0b9aa7a6b94f4fdf1385e503f237a55cea593fd1c254e9c02dcc01671a";
+      # Ref: https://ungoogled-software.github.io/ungoogled-chromium-wiki/faq#can-i-install-extensions-or-themes-from-the-chrome-webstore
+      # Ref: https://discourse.nixos.org/t/home-manager-ungoogled-chromium-with-extensions/15214
+      # url = https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=[VERSION]&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
+      # Fill in chromium VERSION and EXTENSION_ID
+      extensions = 
+      let
+        createChromiumExtensionFor = browserVersion: { id, sha256, version }:
+          {
+            inherit id;
+            crxPath = builtins.fetchurl {
+              url = "https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=${browserVersion}&x=id%3D${id}%26installsource%3Dondemand%26uc";
+              name = "${id}.crx";
+              inherit sha256;
+            };
+            inherit version;
           };
-        }
-        # vimium
-        # {
-        #   id = "dbepggeogbaibhgnhhndojpepiihcmeb";
-        #   version = "2.1.2";
-        #   crxPath = builtins.fetchurl {
-        #     url = "https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=128.0&x=id%3Ddbepggeogbaibhgnhhndojpepiihcmeb%26installsource%3Dondemand%26uc";
-        #     sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
-        #   };
-        # }
+        createChromiumExtension = createChromiumExtensionFor (lib.versions.major pkgs.ungoogled-chromium.version);
+      in
+      [
+        (createChromiumExtension {
+          # ublock origin
+          id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
+          sha256 = "sha256:37992b0b9aa7a6b94f4fdf1385e503f237a55cea593fd1c254e9c02dcc01671a";
+          version = "1.59.0";
+        })
+        (createChromiumExtension {
+          # vimium
+          id = "dbepggeogbaibhgnhhndojpepiihcmeb";
+          sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
+          version = "2.1.2";
+        })
+        (createChromiumExtension {
+          # dark reader
+          id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
+          sha256 = "sha256:d3a604e7dfe4d7482acd447804c1e32ce1fe007915f0a77bda85746e3b38ec23";
+          version = "4.9.89";
+        })
       ];
+      # If not using ungoogled-chromium:
+      # extensions = [
+      #   
+      #   # updateUrl = "https://clients2.google.com/service/update2/crx?response=updatecheck&x=id%3D[EXTENSION_ID]%26uc";
+      #
+      #   # Static declare extension. Need manually updating
+      #   # uBlock Origin
+      #   {
+      #     id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
+      #     updateUrl = "https://clients2.google.com/service/update2/crx?response=updatecheck&x=id%3Dcjpalhdlnbpafiamejdnhcphjbkeiagm%26uc";
+      #   }
+      #   # vimium
+      #   {
+      #     id = "dbepggeogbaibhgnhhndojpepiihcmeb";
+      #     updateUrl = "https://clients2.google.com/service/update2/crx?response=updatecheck&x=id%3Ddbepggeogbaibhgnhhndojpepiihcmeb%26uc";
+      #   }
+      # ];
     };
 
     librewolf = {
       enable = true;
       settings = {
-        # "webgl.disabled" = false;
-        # "privacy.resistFingerprinting" = false;
+        "privacy.resistFingerprinting.letterboxing" = true;
         "privacy.clearOnShutdown.history" = false;
+        "privacy.clearOnShutdown.downloads" = false;
         "privacy.clearOnShutdown.cookies" = false;
         "network.cookie.lifetimePolicy" = 0;
       };
@@ -265,10 +289,6 @@
     };
   };
 
-  # [Optional] If you want to create/modify a desktop entry
-  # Copy-paste and modify desktop entries here beacause:
-  # 1) If app are installed by firejail, no desktop entry installed
-  # 2) If not firejail, electro app need wayland argument 
   xdg = {
     # configFile = {
     #   # Custom firejail profiles
@@ -285,35 +305,14 @@
     #   "Kvantum/Catppuccin-Frappe-Blue".source = "${pkgs.catppuccin-kvantum}/share/Kvantum/Catppuccin-Frappe-Blue";
     # };
 
-    #desktopEntries = {
-    #  "org.telegram.desktop" = {
-    #    name = "Telegram Desktop";
-    #    comment = "Official desktop version of Telegram messaging app";
-    #    # exec = "telegram-desktop -- %u";
-    #    exec = "telegram-desktop --enable-features=UseOzonePlatform --enable-wayland-ime -- %u";
-    #    icon="telegram";
-    #    terminal=false;
-    #    type="Application";
-    #    categories=["Chat" "Network" "InstantMessaging" "Qt"];
-    #    mimeType=["x-scheme-handler/tg"];
-    #    settings = {
-    #      TryExec = "telegram-desktop";
-    #      StartupWMClass="TelegramDesktop";
-    #      Keywords = "tg;chat;im;messaging;messenger;sms;tdesktop;";
-    #      DBusActivatable="true";
-    #      SingleMainWindow="true";
-    #      X-GNOME-UsesNotifications="true";
-    #      X-GNOME-SingleWindow="true";
-    #    };
-    #    actions = {
-    #      "quit" = {
-    #        exec="telegram-desktop -quit";
-    #        name="Quit Telegram";
-    #        icon="application-exit";
-    #      };
-    #    };
-    #  };
-    #};
+    desktopEntries = {
+      "swappy" = {
+        name = "Swappy";
+        exec = "swappy %U";
+        icon = "Swappy";
+        mimeType = ["image/png"];
+      };
+    };
 
     mime.enable = true;
     mimeApps = {
@@ -322,7 +321,7 @@
         "x-scheme-handler/http" = ["librewolf.desktop"];
         "x-scheme-handler/https" = ["librewolf.desktop"];
         "text/html" = ["librewolf.desktop"];
-        # "image/png" = ["swappy"]; # TODO: might need to add swappy as a desktop
+        "image/png" = ["swappy.desktop"]; # TODO: might need to add swappy as a desktop
         "application/pdf" = ["org.pwmt.zathura-pdf-mupdf.desktop"];
       };
     };

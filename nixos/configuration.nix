@@ -85,19 +85,22 @@
   time.timeZone = "America/Los_Angeles";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.inputMethod = {
-    type = "fcitx5";
-    enable = true;
-    fcitx5 = {
-      waylandFrontend = true;
-      addons = with pkgs; [
-        fcitx5-configtool
-        fcitx5-gtk
-        fcitx5-rime
-      ];
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    inputMethod = {
+      enable = true;
+      type = "fcitx5";
+      fcitx5 = {
+        waylandFrontend = true;
+        addons = with pkgs; [
+          fcitx5-configtool
+          fcitx5-gtk
+          fcitx5-rime
+        ];
+      };
     };
- };
+  };
+
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans
@@ -225,12 +228,9 @@
   
   # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
   users.users = {
-    # FIXME: Replace with your username
+    # TODO: Replace with your username
     oar = {
       isNormalUser = true;
-      openssh.authorizedKeys.keys = [
-        # TODO: Add your SSH public key(s) here, if you plan on using SSH to connect
-      ];
       # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
       extraGroups = ["wheel" "networkmanager"];
     };
