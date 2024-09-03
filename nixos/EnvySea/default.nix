@@ -2,7 +2,7 @@
   inputs,
   ...
 }: let
-  user = "oar"; # Giant oarfish
+  user = "simmer";
 in {
   imports = [
     ./hardware-configuration.nix

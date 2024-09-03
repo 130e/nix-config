@@ -119,8 +119,8 @@
         (createChromiumExtension {
           # dark reader
           id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-          sha256 = "sha256:d3a604e7dfe4d7482acd447804c1e32ce1fe007915f0a77bda85746e3b38ec23";
-          version = "4.9.89";
+          sha256 = "sha256:06099ee57eb4b07d6f2331807a3a7ed8b66e90ac2f9f984476489bba623c528f";
+          version = "4.9.90";
         })
       ];
       # If not using ungoogled-chromium:

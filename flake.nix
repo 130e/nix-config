@@ -37,11 +37,11 @@
     # Available through 'home-manager --flake .#your-username@your-hostname'
     homeConfigurations = {
       # NOTE: replace with your username@hostname
-      "oar@EnvySea" = home-manager.lib.homeManagerConfiguration {
+      "simmer@EnvySea" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
         extraSpecialArgs = {inherit inputs outputs;};
         # > Our main home-manager configuration file <
-        modules = [./home-manager/oar.nix ./home-manager/home.nix ./home-manager/desktop.nix];
+        modules = [./home-manager/simmer.nix ./home-manager/home.nix ./home-manager/desktop.nix];
       };
       
       "tila@IcySurface" = home-manager.lib.homeManagerConfiguration {
