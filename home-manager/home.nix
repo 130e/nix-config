@@ -91,7 +91,7 @@
   # --------------
 
   home.packages = with pkgs; [
-    neofetch
+    fastfetch
 
     # General code
     python3

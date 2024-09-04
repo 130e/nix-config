@@ -73,11 +73,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "EnvySea"; # Define your hostname.
-  # Pick only one of the below networking options.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
-
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
@@ -127,9 +122,6 @@
     alsa.support32Bit = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.libinput.enable = true;
-
   # Security
   security = {
     rtkit.enable = true; # Bluetooth realtime kit
@@ -165,20 +157,6 @@
       wget
       curl
       git
-      # Hyprland desktop
-      hyprcursor
-      libnotify
-      #(writeShellScriptBin "hyprmontoggle" (builtins.readFile ./script/hyprmontoggle.sh)) # Scrcipt for toggling monitor
-      dunst
-      xdg-utils
-      wl-clipboard
-      swww
-      brightnessctl
-      wofi
-      grim
-      slurp
-      grimblast
-      swappy
       # Basic desktop apps
       librewolf
       kitty
@@ -189,40 +167,18 @@
       pavucontrol
       playerctl
       pamixer
-      # Gtk themes
-      kanagawa-gtk-theme
-      vimix-gtk-themes
-      # Icon themes
-      kanagawa-icon-theme
-      papirus-icon-theme
-      # Cursor themes
-      vimix-cursor-theme
-      bibata-cursors
     ];
     # Force app to use wayland; doesn't work most of time
     sessionVariables.NIXOS_OZONE_WL = "1";
   };
 
   programs = {
-    hyprland.enable = true;
-    hyprlock.enable = true;
-    waybar.enable = true;
-
     neovim = {
       enable = true;
       defaultEditor = true;
       vimAlias = true;
     };
-
-    steam = {
-      enable = true;
-      remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-      dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-      localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-    };
   };
-
-  services.hypridle.enable = true;
   
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you

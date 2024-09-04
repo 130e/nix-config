@@ -19,16 +19,23 @@
       # cursor themes
       vimix-cursor-theme
       bibata-cursors
+      # Personal APPs
+      drawio
+      keepassxc
+      kitty
+      xfce.thunar
+      swappy
     ];
     # Force app to use wayland; doesn't work most of time
     sessionVariables.NIXOS_OZONE_WL = "1";
   };
 
   services = {
-    network-manager-applet.enable = true;
+    # General
+    network-manager-applet.enable = true; # nm gui
     blueman-applet.enable = true; # bluetooth gui
-    mpris-proxy.enable = true; # enable earbud control
-    playerctld.enable = true; # enable media key
+    mpris-proxy.enable = true; # earbud control
+    playerctld.enable = true; # media key
     # spotifyd requires premium
     # spotifyd = {
     #   enable = true;
@@ -85,6 +92,8 @@
         "--enable-wayland-ime"
       ];
       package = pkgs.ungoogled-chromium;
+      # TODO: Can/should I skip sha256? Or, how do I pin crx version
+      # NOTE: manually download plugin
       # Ref: https://ungoogled-software.github.io/ungoogled-chromium-wiki/faq#can-i-install-extensions-or-themes-from-the-chrome-webstore
       # Ref: https://discourse.nixos.org/t/home-manager-ungoogled-chromium-with-extensions/15214
       # url = https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=[VERSION]&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
@@ -177,23 +186,35 @@
         recolor-keephue = true;
       };
     };
+
+    # TODO:testing
+    thunderbird = {
+      enable = true;
+      profiles = {
+        "simmer" = {
+          isDefault = true;
+        };
+      };
+    };
+
+    # TODO:testing
+    joplin-desktop.enable = true;
   };
 
   xdg = {
-    # configFile = {
-    #   # Custom firejail profiles
-    #   firejail = {
-    #     source = ./firejail;
-    #     recursive = true;
-    #   };
-    #   # Set Kvantum theme declaratively and as readonly
-    #   "Kvantum/kvantum.kvconfig".text = ''
-    #     [General]
-    #     theme=Catppuccin-Frappe-Blue
-    #   '';
-    #   # If you need copy kvantum theme from install folder
-    #   "Kvantum/Catppuccin-Frappe-Blue".source = "${pkgs.catppuccin-kvantum}/share/Kvantum/Catppuccin-Frappe-Blue";
-    # };
+    configFile = {
+      "kitty" = {
+        source = ../dotfiles/kitty;
+        recursive = true;
+      };
+      # Set Kvantum theme declaratively and as readonly
+      # "Kvantum/kvantum.kvconfig".text = ''
+      #   [General]
+      #   theme=Catppuccin-Frappe-Blue
+      # '';
+      # If you need copy kvantum theme from install folder
+      # "Kvantum/Catppuccin-Frappe-Blue".source = "${pkgs.catppuccin-kvantum}/share/Kvantum/Catppuccin-Frappe-Blue";
+    };
 
     desktopEntries = {
       "swappy" = {
