@@ -20,8 +20,7 @@ in {
   services.libinput.enable = true;
 
   programs = {
-    # NOTE: Required by Hyprland
-    hyprland.enable = true;
+    hyprland.enable = true; # Required by Hyprland
 
     steam = {
       enable = true;
@@ -31,6 +30,10 @@ in {
     };
 
     wireshark.enable = true;
+  };
+
+  security = {
+    pam.services.hyprlock = {}; # Enable hyprlock to use PAM
   };
 
   users.users = {

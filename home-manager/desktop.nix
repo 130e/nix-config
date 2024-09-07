@@ -36,6 +36,8 @@
     blueman-applet.enable = true; # bluetooth gui
     mpris-proxy.enable = true; # earbud control
     playerctld.enable = true; # media key
+    # RDP
+    remmina.enable = true;
     # spotifyd requires premium
     # spotifyd = {
     #   enable = true;
@@ -184,24 +186,13 @@
         recolor-darkcolor = "#dcd7ba";
         recolor-lightcolor = "#1f1f28";
         recolor-keephue = true;
+        font = "OpenDyslexic normal 10";
       };
     };
-
-    # TODO:testing
-    thunderbird = {
-      enable = true;
-      profiles = {
-        "simmer" = {
-          isDefault = true;
-        };
-      };
-    };
-
-    # TODO:testing
-    joplin-desktop.enable = true;
   };
 
   xdg = {
+    # NOTE: some app I prefer dotfile
     configFile = {
       "kitty" = {
         source = ../dotfiles/kitty;

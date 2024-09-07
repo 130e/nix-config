@@ -47,6 +47,8 @@
     extraConfig = builtins.readFile ../dotfiles/hypr/hyprland.conf;
   };
 
+  # TODO: hypridle doesn't work properly if started manually as systemd service
+  # So use HM options here
   services = {
     dunst = {
       enable = true;

@@ -99,7 +99,7 @@
     noto-fonts-color-emoji
     # noto-fonts-monochrome-emoji
     noto-fonts-emoji-blob-bin
-    (nerdfonts.override {fonts = ["JetBrainsMono" "SpaceMono" "FiraCode"];})
+    (nerdfonts.override {fonts = ["JetBrainsMono" "SpaceMono" "FiraCode" "OpenDyslexic"];})
   ];
 
   # Bluetooth
@@ -125,7 +125,6 @@
   # Security
   security = {
     rtkit.enable = true; # Bluetooth realtime kit
-    pam.services.hyprlock = {}; # Enable hyprlock to use PAM
     sudo.wheelNeedsPassword = false; # NoPasswd needed for wheel
   };
 
