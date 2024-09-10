@@ -1,5 +1,5 @@
-# This is your system's configuration file.
-# Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
+# NixOS common configuration
+# Safe to reuse
 {
   inputs,
   lib,
@@ -93,6 +93,7 @@
     };
   };
 
+  # Fonts
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans
@@ -112,7 +113,8 @@
       };
     };
   };
-  services.blueman.enable = true;
+  security.rtkit.enable = true; # Bluetooth realtime kit
+  services.blueman.enable = true; # blueman applet
 
   # Enable sound.
   services.pipewire = {
@@ -124,7 +126,6 @@
 
   # Security
   security = {
-    rtkit.enable = true; # Bluetooth realtime kit
     sudo.wheelNeedsPassword = false; # NoPasswd needed for wheel
   };
 
@@ -134,9 +135,6 @@
     gvfs.enable = true; 
     udisks2.enable = true;
   };
-
-  # Power
-  services.tlp.enable = true;
 
   # Virtualisation
   virtualisation = {
@@ -177,6 +175,7 @@
       defaultEditor = true;
       vimAlias = true;
     };
+    wireshark.enable = true;
   };
   
   # Copy the NixOS configuration file and link it from the resulting system

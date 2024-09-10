@@ -1,3 +1,5 @@
+# home-manager user environment if using Hyprland
+# NOTE: Hyprland also need to be configured in NixOS
 {
   pkgs,
   config,
@@ -20,7 +22,7 @@
       brightnessctl
       hyprcursor
       libnotify
-      # (writeShellScriptBin "hyprmontoggle" (builtins.readFile ./hypr/hyprmontoggle.sh)) # Scrcipt for toggling monitor
+      # (writeShellScriptBin "hyprmontoggle" (builtins.readFile ./hypr/hyprmontoggle.sh))
       grim
       slurp
       grimblast
@@ -96,8 +98,8 @@
           }
 
           {
-            timeout = 1800;                                # 30min
-            on-timeout = "systemctl suspend";              # suspend pc
+            timeout = 7200;                                # 2 hr
+            on-timeout = "systemctl hibernate";            # hibernate
           }
         ];
       };

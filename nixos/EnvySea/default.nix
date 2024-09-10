@@ -1,5 +1,8 @@
+# EnvySea
+# My main laptop with touch screen
 { 
   inputs,
+  pkgs,
   ...
 }: let
   user = "simmer";
@@ -9,8 +12,6 @@ in {
   ];
 
   networking.hostName = "EnvySea"; # Define your hostname.
-  # Pick only one of the below networking options.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager = {
     enable = true;
     wifi.powersave = true;
@@ -28,13 +29,14 @@ in {
       dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
       localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
     };
-
-    wireshark.enable = true;
   };
 
   security = {
     pam.services.hyprlock = {}; # Enable hyprlock to use PAM
   };
+
+  # Power
+  services.tlp.enable = true;
 
   users.users = {
     ${user} = {

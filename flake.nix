@@ -1,3 +1,6 @@
+# Flake config
+# Glue NixOS and home-manager together
+# Manage hosts
 {
   description = "Nixos config";
 
@@ -20,6 +23,7 @@
   in {
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
+    # sudo nixos-rebuild switch --flake ~/nix-config#EnvySea --option eval-cache false --show-trace
     nixosConfigurations = {
       # NOTE: replace with your hostname
       EnvySea = nixpkgs.lib.nixosSystem {
@@ -35,6 +39,7 @@
 
     # Standalone home-manager configuration entrypoint
     # Available through 'home-manager --flake .#your-username@your-hostname'
+    # home-manager switch --flake ~/nix-config#simmer@EnvySea --option eval-cache false --show-trace
     homeConfigurations = {
       # NOTE: replace with your username@hostname
       "simmer@EnvySea" = home-manager.lib.homeManagerConfiguration {

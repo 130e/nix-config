@@ -1,5 +1,5 @@
-# This is your home-manager configuration file
-# Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
+# home-manager configuration file
+# Set up basic headless environment for user
 {
   inputs,
   lib,
@@ -56,9 +56,9 @@
     vimAlias = true;
     vimdiffAlias = true;
     defaultEditor = true;
-    # extraPackages = with pkgs; [ ];
     withNodeJs = true;
     withPython3 = true;
+    # extraPackages = with pkgs; [ ];
   };
 
   programs.starship = {
@@ -71,7 +71,7 @@
     enable = true;
     nix-direnv.enable = true;
     enableBashIntegration = true;
-    # enableFishIntegration = true; # this option is readonly and always true
+    # enableFishIntegration = true; # defaul true
   };
 
   programs.fish = {
@@ -87,24 +87,37 @@
 
   programs.btop.enable = true;
 
+  programs.ranger = {
+    enable = true;
+    settings = {
+      preview_images = true;
+      preview_images_method = "kitty";
+    };
+  };
+
+  programs.nix-index = {
+    enable = true;
+    enableBashIntegration = true;
+    enableFishIntegration = true;
+  };
+
   # Home packages
   # --------------
 
   home.packages = with pkgs; [
-    fastfetch
-
-    # General code
+    # General coding
     python3
+    black
     gcc
     gnumake
 
-    # archive
+    # Archive
     zip
     unzip
     xz
     p7zip
 
-    # utils
+    # Utils
     ripgrep
     tree
     bc
@@ -112,16 +125,25 @@
     ffmpeg
     file
 
-    # network
+    # Network
     tcpdump
     iperf3
     nethogs
+    qtwirediff
+
+    # Fonts I need fonts for editor :)
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
+    noto-fonts-emoji-blob-bin
+    (nerdfonts.override {fonts = ["JetBrainsMono" "SpaceMono" "FiraCode" "OpenDyslexic"];})
+
+    # rice
+    fastfetch
   ];
 
   # services
   # ---------
-
-  services.syncthing.enable = true;
 
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";

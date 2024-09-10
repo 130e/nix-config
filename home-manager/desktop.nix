@@ -1,3 +1,4 @@
+# home-manager GUI desktop apps
 {
   lib,
   pkgs,
@@ -23,8 +24,10 @@
       drawio
       keepassxc
       kitty
+      foot
       xfce.thunar
       swappy
+      remmina
     ];
     # Force app to use wayland; doesn't work most of time
     sessionVariables.NIXOS_OZONE_WL = "1";
@@ -36,8 +39,7 @@
     blueman-applet.enable = true; # bluetooth gui
     mpris-proxy.enable = true; # earbud control
     playerctld.enable = true; # media key
-    # RDP
-    remmina.enable = true;
+    # remmina.enable = true; # Autostart remmina
     # spotifyd requires premium
     # spotifyd = {
     #   enable = true;
@@ -186,7 +188,7 @@
         recolor-darkcolor = "#dcd7ba";
         recolor-lightcolor = "#1f1f28";
         recolor-keephue = true;
-        font = "OpenDyslexic normal 10";
+        font = "OpenDyslexic Nerd Font";
       };
     };
   };
@@ -220,11 +222,16 @@
     mimeApps = {
       enable = true;
       defaultApplications = {
-        "x-scheme-handler/http" = ["librewolf.desktop"];
-        "x-scheme-handler/https" = ["librewolf.desktop"];
-        "text/html" = ["librewolf.desktop"];
-        "image/png" = ["swappy.desktop"];
-        "application/pdf" = ["org.pwmt.zathura-pdf-mupdf.desktop"];
+        "application/pdf"           = ["org.pwmt.zathura-pdf-mupdf.desktop"];
+        "image/*"                   = ["swappy.desktop"];
+        "text/html"                 = ["librewolf.desktop"];
+        "application/x-sh"          = ["kitty.desktop"];
+        "application/x-shellscript" = ["kitty.desktop"];
+        "text/*"                    = ["kitty.desktop"];
+        "x-scheme-handler/http"     = ["librewolf.desktop"];
+        "x-scheme-handler/https"    = ["librewolf.desktop"];
+        "x-scheme-handler/kitty"    = ["kitty.desktop"];
+        "x-scheme-handler/ssh"      = ["kitty.desktop"];
       };
     };
 
