@@ -4,11 +4,12 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   # NOTE: Desktop specific config
   # Apply to system with GUI
   # ------------------------
-  
+
   home = {
     packages = with pkgs; [
       # gtk themes
@@ -28,6 +29,7 @@
       xfce.thunar
       swappy
       remmina
+      steam-run
     ];
     # Force app to use wayland; doesn't work most of time
     sessionVariables.NIXOS_OZONE_WL = "1";
@@ -54,8 +56,6 @@
   };
 
   # GTK and QT are configured here
-  # Themes are installed system wide
-  # But no system wide option for configuring theme
   gtk = {
     enable = true;
     # gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
@@ -88,6 +88,11 @@
   };
 
   programs = {
+    # Easy and dirty
+    vscode = {
+      enable = true;
+      package = pkgs.vscodium.fhs;
+    };
     chromium = {
       enable = true;
       # [Bug] chromium does not respect NIXOS_OZONE_WL=1
@@ -102,45 +107,57 @@
       # Ref: https://discourse.nixos.org/t/home-manager-ungoogled-chromium-with-extensions/15214
       # url = https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=[VERSION]&x=id%3D[EXTENSION_ID]%26installsource%3Dondemand%26uc
       # Fill in chromium VERSION and EXTENSION_ID
-      extensions = 
-      let
-        createChromiumExtensionFor = browserVersion: { id, sha256, version }:
-          {
-            inherit id;
-            crxPath = builtins.fetchurl {
-              url = "https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=${browserVersion}&x=id%3D${id}%26installsource%3Dondemand%26uc";
-              name = "${id}.crx";
-              inherit sha256;
+      extensions =
+        let
+          createChromiumExtensionFor =
+            browserVersion:
+            {
+              id,
+              sha256,
+              version,
+            }:
+            {
+              inherit id;
+              crxPath = builtins.fetchurl {
+                url = "https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=${browserVersion}&x=id%3D${id}%26installsource%3Dondemand%26uc";
+                name = "${id}.crx";
+                inherit sha256;
+              };
+              inherit version;
             };
-            inherit version;
-          };
-        createChromiumExtension = createChromiumExtensionFor (lib.versions.major pkgs.ungoogled-chromium.version);
-      in
-      [
-        (createChromiumExtension {
-          # ublock origin
-          id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
-          sha256 = "sha256:37992b0b9aa7a6b94f4fdf1385e503f237a55cea593fd1c254e9c02dcc01671a";
-          version = "1.59.0";
-        })
-        (createChromiumExtension {
-          # vimium
-          id = "dbepggeogbaibhgnhhndojpepiihcmeb";
-          sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
-          version = "2.1.2";
-        })
-        (createChromiumExtension {
-          # dark reader
-          id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-          sha256 = "sha256:06099ee57eb4b07d6f2331807a3a7ed8b66e90ac2f9f984476489bba623c528f";
-          version = "4.9.90";
-        })
-      ];
+          createChromiumExtension = createChromiumExtensionFor (
+            lib.versions.major pkgs.ungoogled-chromium.version
+          );
+        in
+        [
+          (createChromiumExtension {
+            # ublock origin
+            id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
+            sha256 = "sha256:37992b0b9aa7a6b94f4fdf1385e503f237a55cea593fd1c254e9c02dcc01671a";
+            version = "1.59.0";
+          })
+          (createChromiumExtension {
+            # Vimium
+            id = "dbepggeogbaibhgnhhndojpepiihcmeb";
+            sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
+            version = "2.1.2";
+          })
+          (createChromiumExtension {
+            # Dark reader
+            id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
+            sha256 = "sha256:06099ee57eb4b07d6f2331807a3a7ed8b66e90ac2f9f984476489bba623c528f";
+            version = "4.9.90";
+          })
+          (createChromiumExtension {
+            # Privacy badger
+            id = "pkehgijcmpdhfbdbbnkijodmdjhbjlgp";
+            sha256 = "sha256:1f0483a03a92466bbdc47c05eac81931ea6d54f32851f7c8e55cb62ff651584b";
+            version = "2024.7.17";
+          })
+        ];
       # If not using ungoogled-chromium:
       # extensions = [
-      #   
       #   # updateUrl = "https://clients2.google.com/service/update2/crx?response=updatecheck&x=id%3D[EXTENSION_ID]%26uc";
-      #
       #   # Static declare extension. Need manually updating
       #   # uBlock Origin
       #   {
@@ -159,19 +176,20 @@
       enable = true;
       settings = {
         "privacy.resistFingerprinting.letterboxing" = true;
-        "privacy.clearOnShutdown.history" = false;
-        "privacy.clearOnShutdown.downloads" = false;
-        "privacy.clearOnShutdown.cookies" = false;
-        "network.cookie.lifetimePolicy" = 0;
+        # "privacy.clearOnShutdown.history" = false;
+        # "privacy.clearOnShutdown.downloads" = false;
+        # "privacy.clearOnShutdown.cookies" = false;
+        # "network.cookie.lifetimePolicy" = 0;
       };
     };
 
     qutebrowser = {
       enable = true;
       searchEngines = {
-        DEFAULT = "https://www.startpage.com/sp/search?query={}";
+        DEFAULT = "https://search.brave.com/search?q={}";
         g = "https://www.google.com/search?hl=en&q={}";
-        nw = "https://wiki.nixos.org/index.php?search={}";
+        spg = "https://www.startpage.com/sp/search?query={}";
+        nxp = "https://search.nixos.org/packages?channel=unstable&type=packages&query={}";
         hm = "https://home-manager-options.extranix.com/?query={}";
       };
       extraConfig = ''
@@ -214,7 +232,7 @@
         name = "Swappy";
         exec = "swappy %U";
         icon = "Swappy";
-        mimeType = ["image/png"];
+        mimeType = [ "image/png" ];
       };
     };
 
@@ -222,16 +240,16 @@
     mimeApps = {
       enable = true;
       defaultApplications = {
-        "application/pdf"           = ["org.pwmt.zathura-pdf-mupdf.desktop"];
-        "image/*"                   = ["swappy.desktop"];
-        "text/html"                 = ["librewolf.desktop"];
-        "application/x-sh"          = ["kitty.desktop"];
-        "application/x-shellscript" = ["kitty.desktop"];
-        "text/*"                    = ["kitty.desktop"];
-        "x-scheme-handler/http"     = ["librewolf.desktop"];
-        "x-scheme-handler/https"    = ["librewolf.desktop"];
-        "x-scheme-handler/kitty"    = ["kitty.desktop"];
-        "x-scheme-handler/ssh"      = ["kitty.desktop"];
+        "application/pdf" = [ "org.pwmt.zathura-pdf-mupdf.desktop" ];
+        "image/*" = [ "swappy.desktop" ];
+        "text/html" = [ "librewolf.desktop" ];
+        "application/x-sh" = [ "kitty.desktop" ];
+        "application/x-shellscript" = [ "kitty.desktop" ];
+        "text/*" = [ "kitty.desktop" ];
+        "x-scheme-handler/http" = [ "librewolf.desktop" ];
+        "x-scheme-handler/https" = [ "librewolf.desktop" ];
+        "x-scheme-handler/kitty" = [ "kitty.desktop" ];
+        "x-scheme-handler/ssh" = [ "kitty.desktop" ];
       };
     };
 

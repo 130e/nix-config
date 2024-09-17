@@ -1,0 +1,13 @@
+[[language]]
+auto-format = true
+name = "nix"
+
+[language.formatter]
+command = "nixfmt"
+
+[[language]]
+auto-format = true
+name = "python"
+
+[language.formatter]
+command = "black"

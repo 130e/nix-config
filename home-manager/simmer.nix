@@ -19,12 +19,13 @@
   services.syncthing.enable = true;
 
   # Nextcloud netrc
+  # TODO: Find a better way to integrate .netrc 
   # NOTE: Set real credential after install
   # .netrc
-  home.file.".netrc".text = ''default
-    login admin
-    password FIXME
-  '';
+  # home.file.".netrc".text = ''default
+  #   login admin
+  #   password FIXME
+  # '';
 
   systemd.user = {
     services.nextcloud-autosync = {
@@ -34,7 +35,7 @@
       };
       Service = {
         Type = "simple";
-        ExecStart= "${pkgs.nextcloud-client}/bin/nextcloudcmd -h -n --path /Documents /home/simmer/Nextcloud/Documents/ https://SERVER_ADDRESS"; # NOTE: server addr
+        ExecStart= "${pkgs.nextcloud-client}/bin/nextcloudcmd -h -n --path /Documents /home/simmer/Nextcloud/Documents/ https://prevrain.simmer.work"; # NOTE: server addr
         TimeoutStopSec = "180";
         KillMode = "process";
         KillSignal = "SIGINT";

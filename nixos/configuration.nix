@@ -6,7 +6,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # You can import other NixOS modules here
   imports = [
     # If you want to use modules from other flakes (such as nixos-hardware):
@@ -37,34 +38,36 @@
     };
   };
 
-  nix = let
-    flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
-  in {
-    settings = {
-      # Enable flakes and new 'nix' command
-      experimental-features = "nix-command flakes";
-      # Opinionated: disable global registry
-      flake-registry = "";
-      # Workaround for https://github.com/NixOS/nix/issues/9574
-      nix-path = config.nix.nixPath;
+  nix =
+    let
+      flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
+    in
+    {
+      settings = {
+        # Enable flakes and new 'nix' command
+        experimental-features = "nix-command flakes";
+        # Opinionated: disable global registry
+        flake-registry = "";
+        # Workaround for https://github.com/NixOS/nix/issues/9574
+        nix-path = config.nix.nixPath;
+      };
+
+      # Opinated: 130e
+      # Storage optimization https://nixos.wiki/wiki/Storage_optimization
+      optimise.automatic = true;
+      gc = {
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 7d";
+      };
+
+      # Opinionated: disable channels
+      channel.enable = false;
+
+      # Opinionated: make flake registry and nix path match flake inputs
+      registry = lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
+      nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
     };
-
-    # Opinated: 130e
-    # Storage optimization https://nixos.wiki/wiki/Storage_optimization
-    optimise.automatic = true;
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
-
-    # Opinionated: disable channels
-    channel.enable = false;
-
-    # Opinionated: make flake registry and nix path match flake inputs
-    registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
-    nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
-  };
 
   # Custom system wide config
   # -------------------------
@@ -100,7 +103,14 @@
     noto-fonts-color-emoji
     # noto-fonts-monochrome-emoji
     noto-fonts-emoji-blob-bin
-    (nerdfonts.override {fonts = ["JetBrainsMono" "SpaceMono" "FiraCode" "OpenDyslexic"];})
+    (nerdfonts.override {
+      fonts = [
+        "JetBrainsMono"
+        "SpaceMono"
+        "FiraCode"
+        "OpenDyslexic"
+      ];
+    })
   ];
 
   # Bluetooth
@@ -132,7 +142,7 @@
   # USB mounting support
   services = {
     devmon.enable = true;
-    gvfs.enable = true; 
+    gvfs.enable = true;
     udisks2.enable = true;
   };
 
@@ -177,7 +187,7 @@
     };
     wireshark.enable = true;
   };
-  
+
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
   # accidentally delete configuration.nix.

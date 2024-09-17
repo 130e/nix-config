@@ -6,7 +6,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # You can import other home-manager modules here
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
@@ -55,10 +56,35 @@
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
-    defaultEditor = true;
     withNodeJs = true;
     withPython3 = true;
-    # extraPackages = with pkgs; [ ];
+  };
+  # Vanilla nvchad
+  xdg.configFile.nvim = {
+    source = ../dotfiles/nvim;
+    recursive = true;
+  };
+
+  programs.helix = {
+    enable = true;
+    languages.language = [
+      {
+        name = "nix";
+        auto-format = true;
+        formatter.command = "${pkgs.nixfmt-rfc-style}/bin/nixfmt";
+      }
+      {
+        name = "python";
+        auto-format = true;
+        formatter.command = "${pkgs.black}/bin/black";
+      }
+    ];
+  };
+
+  programs.kakoune = {
+    defaultEditor = true;
+    enable = true;
+    extraConfig = builtins.readFile ../dotfiles/kak/kakrc;
   };
 
   programs.starship = {
@@ -71,7 +97,7 @@
     enable = true;
     nix-direnv.enable = true;
     enableBashIntegration = true;
-    # enableFishIntegration = true; # defaul true
+    # enableFishIntegration = true; # default true
   };
 
   programs.fish = {
@@ -101,15 +127,36 @@
     enableFishIntegration = true;
   };
 
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts = {
+      emoji = [ "Noto Color Emoji" ];
+      sansSerif = [ "Noto Sans" ];
+      serif = [ "Noto Serif" ];
+      monospace = [
+        "JetBrainsMono Nerd Font"
+        "FiraCode Nerd Font Mono"
+        "Noto Sans Mono"
+      ];
+    };
+  };
+
   # Home packages
   # --------------
 
   home.packages = with pkgs; [
     # General coding
     python3
-    black
     gcc
     gnumake
+    # Formatter
+    nil
+    nixfmt-rfc-style
+    black
+    # LSP
+    python312Packages.python-lsp-server
+    clang-tools
+    vscode-langservers-extracted # html/css/json...
 
     # Archive
     zip
@@ -118,25 +165,35 @@
     p7zip
 
     # Utils
+    tmux
+    git
     ripgrep
     tree
     bc
     unrar-free
     ffmpeg
     file
+    fd
 
     # Network
     tcpdump
     iperf3
-    nethogs
     qtwirediff
+    nmap
 
     # Fonts I need fonts for editor :)
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
     noto-fonts-emoji-blob-bin
-    (nerdfonts.override {fonts = ["JetBrainsMono" "SpaceMono" "FiraCode" "OpenDyslexic"];})
+    (nerdfonts.override {
+      fonts = [
+        "JetBrainsMono"
+        "SpaceMono"
+        "FiraCode"
+        "OpenDyslexic"
+      ];
+    })
 
     # rice
     fastfetch

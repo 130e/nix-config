@@ -1,12 +1,14 @@
 # EnvySea
 # My main laptop with touch screen
-{ 
+{
   inputs,
   pkgs,
   ...
-}: let
+}:
+let
   user = "simmer";
-in {
+in
+{
   imports = [
     ./hardware-configuration.nix
   ];
@@ -22,7 +24,6 @@ in {
 
   programs = {
     hyprland.enable = true; # Required by Hyprland
-
     steam = {
       enable = true;
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
@@ -32,7 +33,7 @@ in {
   };
 
   security = {
-    pam.services.hyprlock = {}; # Enable hyprlock to use PAM
+    pam.services.hyprlock = { }; # Enable hyprlock to use PAM
   };
 
   # Power
@@ -41,7 +42,11 @@ in {
   users.users = {
     ${user} = {
       isNormalUser = true;
-      extraGroups = ["wheel" "networkmanager" "wireshark"];
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "wireshark"
+      ];
     };
   };
 
