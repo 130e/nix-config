@@ -70,13 +70,15 @@
           ];
         };
 
-        "simmer@Bowl" = home-manager.lib.homeManagerConfiguration {
+        # Used by home-manager to install a user headless environment
+        # NOTE: update user.nix to the username used
+        "user" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = {
             inherit inputs outputs;
           };
           modules = [
-            ./home-manager/simmer.nix
+            ./home-manager/user.nix
             ./home-manager/home.nix
           ];
         };
