@@ -13,52 +13,73 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    home-manager,
-    ...
-  } @ inputs: let
-    inherit (self) outputs;
-  in {
-    # NixOS configuration entrypoint
-    # Available through 'nixos-rebuild --flake .#your-hostname'
-    # sudo nixos-rebuild switch --flake ~/nix-config#EnvySea --option eval-cache false --show-trace
-    nixosConfigurations = {
-      # NOTE: replace with your hostname
-      EnvySea = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        # > Our main nixos configuration file <
-        modules = [./nixos/EnvySea ./nixos/configuration.nix];
-      };
-      IcySurface = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        modules = [./nixos/IcySurface ./nixos/configuration.nix];
-      };
-    };
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }@inputs:
+    let
+      inherit (self) outputs;
+    in
+    {
+      # NixOS configuration entrypoint
+      # Available through 'nixos-rebuild --flake .#your-hostname'
+      # sudo nixos-rebuild switch --flake ~/nix-config#EnvySea --option eval-cache false --show-trace
+      nixosConfigurations = {
+        # NOTE: replace with your hostname
+        EnvySea = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          # > Our main nixos configuration file <
+          modules = [
+            ./nixos/EnvySea
+            ./nixos/configuration.nix
+          ];
+        };
 
-    # Standalone home-manager configuration entrypoint
-    # Available through 'home-manager --flake .#your-username@your-hostname'
-    # home-manager switch --flake ~/nix-config#simmer@EnvySea --option eval-cache false --show-trace
-    homeConfigurations = {
-      # NOTE: replace with your username@hostname
-      "simmer@EnvySea" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
-        # > Our main home-manager configuration file <
-        modules = [
-          ./home-manager/simmer.nix
-          ./home-manager/home.nix
-          ./home-manager/desktop.nix
-          ./home-manager/hypr.nix
-        ];
+        Bowl = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./nixos/Bowl
+            ./nixos/configuration.nix
+          ];
+        };
       };
-      
-      "tila@IcySurface" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [./home-manager/tila.nix ./home-manager/home.nix ./home-manager/desktop.nix];
+
+      # Standalone home-manager configuration entrypoint
+      # Available through 'home-manager --flake .#your-username@your-hostname'
+      # home-manager switch --flake ~/nix-config#simmer@EnvySea --option eval-cache false --show-trace
+      homeConfigurations = {
+        # NOTE: replace with your username@hostname
+        "simmer@EnvySea" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = {
+            inherit inputs outputs;
+          };
+          # > Our main home-manager configuration file <
+          modules = [
+            ./home-manager/simmer.nix
+            ./home-manager/home.nix
+            ./home-manager/desktop.nix
+            ./home-manager/hypr.nix
+          ];
+        };
+
+        "simmer@Bowl" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
+          extraSpecialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./home-manager/simmer.nix
+            ./home-manager/home.nix
+          ];
+        };
       };
     };
-  };
 }

@@ -1,14 +1,18 @@
 # Code snippets & Notes
+
 ## Nixos
+
 ```nix
 
 ```
+
 ## home-manager
+
 ```nix
   # [Optional] If you want to create/modify a desktop entry
   # Copy-paste and modify desktop entries here beacause:
   # 1) If app are installed by firejail, no desktop entry installed
-  # 2) If not firejail, electro app need wayland argument 
+  # 2) If not firejail, electro app need wayland argument
   xdg = {
     configFile = {
       # Custom firejail profiles

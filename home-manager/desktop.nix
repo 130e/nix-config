@@ -22,6 +22,7 @@
       vimix-cursor-theme
       bibata-cursors
       # Personal APPs
+      rofi-wayland
       drawio
       keepassxc
       kitty
@@ -30,6 +31,7 @@
       swappy
       remmina
       steam-run
+      lutris
     ];
     # Force app to use wayland; doesn't work most of time
     sessionVariables.NIXOS_OZONE_WL = "1";
@@ -41,18 +43,6 @@
     blueman-applet.enable = true; # bluetooth gui
     mpris-proxy.enable = true; # earbud control
     playerctld.enable = true; # media key
-    # remmina.enable = true; # Autostart remmina
-    # spotifyd requires premium
-    # spotifyd = {
-    #   enable = true;
-    #   settings = {
-    #     global = {
-    #       username = "Alex";
-    #       password = "foo";
-    #       device_name = "nix";
-    #     };
-    #   };
-    # };
   };
 
   # GTK and QT are configured here
@@ -228,11 +218,24 @@
     };
 
     desktopEntries = {
-      "swappy" = {
-        name = "Swappy";
-        exec = "swappy %U";
-        icon = "Swappy";
-        mimeType = [ "image/png" ];
+      "kakoune" = {
+        name = "Kakoune";
+        genericName = "Text Editor";
+        # NOTE: enable xdg-open being called from anywhere to open a terminal correctly
+        exec = "kitty kak %F";
+        terminal = true;
+        type = "Application";
+        icon = "kakoune";
+        categories = [
+          "Utility"
+          "TextEditor"
+        ];
+        startupNotify = false;
+        mimeType = [ "text/*" ];
+        settings = {
+          TryExec = "kak";
+          Keywords = "Text;editor";
+        };
       };
     };
 
@@ -241,11 +244,17 @@
       enable = true;
       defaultApplications = {
         "application/pdf" = [ "org.pwmt.zathura-pdf-mupdf.desktop" ];
-        "image/*" = [ "swappy.desktop" ];
+        "application/x-sh" = [ "kakoune.desktop" ];
+        "application/x-shellscript" = [ "kakoune.desktop" ];
         "text/html" = [ "librewolf.desktop" ];
-        "application/x-sh" = [ "kitty.desktop" ];
-        "application/x-shellscript" = [ "kitty.desktop" ];
-        "text/*" = [ "kitty.desktop" ];
+        "text/plain" = [
+          "kakoune.desktop"
+          "Helix.desktop"
+        ];
+        "text/*" = [
+          "kakoune.desktop"
+          "Helix.desktop"
+        ];
         "x-scheme-handler/http" = [ "librewolf.desktop" ];
         "x-scheme-handler/https" = [ "librewolf.desktop" ];
         "x-scheme-handler/kitty" = [ "kitty.desktop" ];

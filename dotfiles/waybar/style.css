@@ -43,12 +43,16 @@
 #waybar {
   background: @base;
   color: @base;
-  font-family: OpenDyslexic Nerd Font, SpaceMono Nerd Font, JetBrains Nerd Font, FiraCode Nerd Font;
+  font-family:
+    OpenDyslexic Nerd Font,
+    SpaceMono Nerd Font,
+    JetBrains Nerd Font,
+    FiraCode Nerd Font;
   font-size: 12pt;
 }
 
 * {
-	min-height: 24px;
+  min-height: 24px;
 }
 
 /* Each module */

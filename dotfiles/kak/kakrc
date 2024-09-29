@@ -1,21 +1,31 @@
-# User preference @mawwww
-# ───────────────────────
+# Editor style
+# ────────────
+colorscheme palenight
 
-set-option global makecmd 'make -j8'
-set-option global grepcmd 'rg --column'
+# Display the status bar on top
 set-option global ui_options terminal_status_on_top=true
-hook global ModuleLoaded clang %{ set-option global clang_options -std=c++20 }
-hook global ModuleLoaded tmux %{ alias global terminal tmux-terminal-vertical }
 
-colorscheme gruvbox-dark
+# Always keep one line and three columns displayed around the cursor
+set-option global scrolloff 1,3
 
-add-highlighter global/ show-matching -previous
+# Display line numbers
+hook global WinCreate ^[^*]+$ %{ add-highlighter window/ number-lines -hlcursor }
 
-set-face global CurSearch +u
+# Highlight trailing whitespace
+add-highlighter global/ regex \h+$ 0:Error
 
+# Highlight keywords
+add-highlighter global/ regex \b(TODO|NOTE|FIXME)\b 0:default+rb
+
+# Highlight all matched selection
+set-face global CurSearch +bu
 hook global RegisterModified '/' %{ add-highlighter -override global/search regex "%reg{/}" 0:CurSearch }
 
-hook global WinCreate ^[^*]+$ %{ add-highlighter window/ number-lines -hlcursor }
+# Softwrap long lines
+add-highlighter global/ wrap -word -indent
+
+# grep command
+set-option global grepcmd 'rg --column'
 
 # Enable editor config
 # ────────────────────
@@ -23,28 +33,46 @@ hook global WinCreate ^[^*]+$ %{ add-highlighter window/ number-lines -hlcursor 
 hook global BufOpenFile .* %{ editorconfig-load }
 hook global BufNewFile .* %{ editorconfig-load }
 
-# Filetype specific hooks
-# ───────────────────────
-
 hook global WinSetOption filetype=(c|cpp) %{
-    clang-enable-autocomplete 
+    clang-enable-autocomplete
     clang-enable-diagnostics
     alias window lint clang-parse
     alias window lint-next-error clang-diagnostics-next
+    set-option buffer formatcmd 'clang-format'
 }
 
 hook global WinSetOption filetype=python %{
     jedi-enable-autocomplete
     lint-enable
     set-option global lintcmd 'flake8'
+    set-option buffer formatcmd 'black -'
+}
+
+hook global WinSetOption filetype=nix %{
+    set-option buffer formatcmd "nixfmt"
+    hook buffer -group format BufWritePre .* format
+}
+
+hook global WinSetOption filetype=(javascript|typescript|css|scss|json|jsonc|markdown|yaml|html) %{
+    set-option buffer formatcmd "prettier --stdin-filepath=%val{buffile}"
+    hook buffer -group format BufWritePre .* format
 }
 
 map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>,<lt>/([\w.]+)\b[^>]*?(?<lt>!/)><ret>}
 
-# Highlight the word under the cursor
+map global normal <c-I> :format<ret>
+
+# cursor config
 # ───────────────────────────────────
 
+# Highlight the word under the cursor
 set-face global CurWord +b
+
+# Switch cursor style to underscore in insert mode
+hook global InsertIdle .* %{
+    set-face window PrimaryCursor default,default+u
+    set-face window PrimaryCursorEol default,default+u
+}
 
 hook global NormalIdle .* %{
     eval -draft %{ try %{
@@ -53,16 +81,18 @@ hook global NormalIdle .* %{
     } catch %{
         add-highlighter -override global/curword group
     } }
+    set-face window PrimaryCursor default,default+r
+    set-face window PrimaryCursorEol default,default+r
 }
 
-# Switch cursor color in insert mode
-# ──────────────────────────────────
-
+# Switch cursor color in insert mod
+# (Not very useful if cursor shape is underscore)
 set-face global InsertCursor default,green+B
 
 hook global ModeChange .*:.*:insert %{
     set-face window PrimaryCursor InsertCursor
     set-face window PrimaryCursorEol InsertCursor
+
 }
 
 hook global ModeChange .*:insert:.* %{ try %{
@@ -70,56 +100,31 @@ hook global ModeChange .*:insert:.* %{ try %{
     unset-face window PrimaryCursorEol
 } }
 
-# Custom mappings
-# ───────────────
-
-map global normal = ':prompt math: %{exec "a%val{text}<lt>esc>|bc<lt>ret>"}<ret>'
-
 # System clipboard handling
 # ─────────────────────────
 
-evaluate-commands %sh{
-    if [ -n "$SSH_TTY" ]; then
-        copy='printf "\033]52;;%s\033\\" $(base64 | tr -d "\n") > $( [ -n "$kak_client_pid" ] && echo /proc/$kak_client_pid/fd/0 || echo /dev/tty )'
-        paste='printf "paste unsupported through ssh"'
-        backend="OSC 52"
-    else
-        case $(uname) in
-            Linux)
-                if [ -n "$WAYLAND_DISPLAY" ]; then
-                    copy="wl-copy -p"; paste="wl-paste -p"; backend=Wayland
-                else
-                    copy="xclip -i"; paste="xclip -o"; backend=X11
-                fi
-                ;;
-            Darwin)  copy="pbcopy"; paste="pbpaste"; backend=OSX ;;
-        esac
+# Wayland system clipboard
+# https://github.com/mawww/kakoune/wiki/Registers---Clipboard#to-yank-copy
+hook global RegisterModified '"' %{ nop %sh{
+    if [ -n "$DISPLAY" ]; then
+        printf %s "$kak_main_reg_dquote" | wl-copy > /dev/null 2>&1 &
+    elif [ -n "$TMUX" ]; then
+        tmux set-buffer -- "$kak_main_reg_dquote"
     fi
+}}
 
-    printf "map global user -docstring 'paste (after) from clipboard' p '<a-!>%s<ret>'\n" "$paste"
-    printf "map global user -docstring 'paste (before) from clipboard' P '!%s<ret>'\n" "$paste"
-    printf "map global user -docstring 'yank to primary' y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to %s primary}<ret>'\n" "$copy" "$backend"
-    printf "map global user -docstring 'yank to clipboard' Y '<a-|>%s<ret>:echo -markup %%{{Information}copied selection to %s clipboard}<ret>'\n" "$copy -selection clipboard" "$backend"
-    printf "map global user -docstring 'replace from clipboard' R '|%s<ret>'\n" "$paste"
-    printf "define-command -override echo-to-clipboard -params .. %%{ echo -to-shell-script '%s' -- %%arg{@} }" "$copy"
-}
+map global user P '!wl-paste -n<ret>'
+map global user p '<a-!>wl-paste -n<ret>'
+map global user R '|wl-paste -n<ret>'
 
 # Various mappings
 # ────────────────
 
-# map global normal '#' :comment-line<ret>
+map global normal '#' :comment-line<ret>
 map global normal <c-/> :comment-line<ret>
 
 map global user -docstring 'next lint error' n ':lint-next-error<ret>'
 map global normal <c-p> :lint<ret>
-
-map global user -docstring 'gdb helper mode' g ':gdb-helper<ret>'
-map global user -docstring 'gdb helper mode (repeat)' G ':gdb-helper-repeat<ret>'
-
-map global user -docstring 'lsp mode' l ':enter-user-mode lsp<ret>'
-
-hook global -always BufOpenFifo '\*grep\*' %{ map global normal <minus> ': grep-next-match<ret>' }
-hook global -always BufOpenFifo '\*make\*' %{ map global normal <minus> ': make-next-error<ret>' }
 
 # Enable <tab>/<s-tab> for insert completion selection
 # ──────────────────────────────────────────────────────
@@ -131,235 +136,37 @@ hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap wi
 # ───────────────
 
 define-command find -params 1 %{ edit %arg{1} }
-complete-command -menu find shell-script-candidates %{ ag -g '' --ignore "$kak_opt_ignored_files" }
+complete-command -menu find shell-script-candidates %{ find . -type f }
 
 define-command mkdir %{ nop %sh{ mkdir -p $(dirname $kak_buffile) } }
 
-define-command ide -params 0..1 %{
-    try %{ rename-session %arg{1} }
+# Smarttab
+# ────────
 
-    rename-client main
-    set-option global jumpclient main
-
-    new rename-client tools
-    set-option global toolsclient tools
-
-    new rename-client docs
-    set-option global docsclient docs
-}
-
-define-command delete-buffers-matching -params 1 %{
-    evaluate-commands -buffer * %{
-        evaluate-commands %sh{ case "$kak_buffile" in $1) echo "delete-buffer" ;; esac }
-    }
-}
-
-declare-option -hidden str swap_buffer_target
-define-command swap-buffer-with -override -params 1 -client-completion %{
-    set-option global swap_buffer_target %val{bufname}
-    edit -scratch # release current window for other client
-    evaluate-commands -client %arg{1} "
-        set-option global swap_buffer_target %%val{bufname}
-        buffer %opt{swap_buffer_target}
-    "
-    delete-buffer # delete the temporary scratch buffer
-    buffer %opt{swap_buffer_target}
-}
-
-declare-option int gdb_server_port 5678
-declare-option str gdb_server_cmd "gdbserver :%opt{gdb_server_port}"
-
-define-command gdb-server -params .. %{
-    fifo %opt{gdb_server_cmd} %arg{@}
-    gdb-session-new -ex "target extended-remote :%opt{gdb_server_port}"
-}
-
-
-declare-option str to_asm_cmd 'g++ -O3 -x c++'
-declare-option str to_asm_prelude '
-#include <utility>
-'
-declare-option -hidden int to_asm_timestamp 0
-
-define-command to-asm -params .. -docstring %{
-    Compile selected text with using the to_asm_cmd option and display assembly in the *asm* buffer
-} %{
-    evaluate-commands -save-regs 'ab"|' %{
-        execute-keys -save-regs '' y
-        set-register a %opt{to_asm_prelude}
-        set-register b %opt{to_asm_cmd}
-        evaluate-commands -try-client %opt{docsclient} %{
-            edit -scratch *asm*
-            set-option buffer filetype gas
-            execute-keys \%R"aP% "|%reg{b} %arg{@} -S - -o - 2>&1|c++filt<ret>" gg
-            try %{ execute-keys -draft \%s^\h*\.cfi_<ret>xd }
-        }
-    }
-}
-
-define-command to-asm-enable -docstring %{
-    Automatically run to-asm on the whole buffer after each change
-} %{
-    remove-hooks window to-asm
-    hook -group to-asm window NormalIdle .* %{ try %{
-        %sh{ [ $kak_opt_to_asm_timestamp -eq $kak_timestamp ] && echo "fail" || echo "nop" }
-        set buffer to_asm_timestamp %val{timestamp}
-        evaluate-commands -draft %{
-            execute-keys '%'
-            to-asm
-        }
-    } }
-}
-
-define-command diff-buffers -override -params 2 %{
+def insert-tab -hidden %{
+    # Fallback to insert <tab> or <space>s based on indentwidth
+    # when hooks are disabled with '\'
     evaluate-commands %sh{
-        file1=$(mktemp)
-        file2=$(mktemp)
-        echo "
-            evaluate-commands -buffer '$1' write -force $file1
-            evaluate-commands -buffer '$2' write -force $file2
-            edit! -scratch *diff-buffers*
-            set buffer filetype diff
-            set-register | 'diff -u $file1 $file2; rm $file1 $file2'
-            execute-keys !<ret>gg
-        "
-}}
-
-complete-command diff-buffers buffer
-
-define-command clang-format-cursor %{
-    exec -draft <percent>| "clang-format --lines=%val{cursor_line}:%val{cursor_line}" <ret>
-}
-
-# hook global GlobalSetOption 'makecmd=ninja(-build)?\b.*' %{ complete-command make shell-script-candidates %{ $kak_opt_makecmd -t targets | cut -f 1 -d : } }
-# hook global GlobalSetOption 'makecmd=bazel\b.*' %{ complete-command make shell-script-candidates %{ bazel query //... } }
-
-# Mail
-# ────
-
-# hook global BufOpenFile .*/mail/.*/(cur|new|tmp)/[^/]+ %{ set-option buffer filetype mail }
-
-# Load local Kakoune config file if it exists
-# ───────────────────────────────────────────
-
-# evaluate-commands %sh{ [ -f $kak_config/local.kak ] && echo "source $kak_config/local.kak" }
-
-# Vim style smarttab indentation @dojoteef
-# ────────────────────────────────────────
-
-# Replicate expandtab from vim.
-declare-option -docstring "Expand <tab> to spaces based on tabstop." bool expandtab yes
-
-# Replicate softtabstop from vim.
-declare-option -docstring "Make tabstop number of spaces feel like a <tab> when pressing <tab> or <backspace> in insert mode." int softtabstop 2
-
-# Helper function for inserting a <tab>
-def softtabstop-insert-tab -hidden %{
-    evaluate-commands -no-hooks -draft -itersel %{
-        try %sh{
-            tabstop=$kak_opt_softtabstop
-            if [ $tabstop -lt 0 ]; then
-                tabstop=$kak_opt_indentwidth
-            fi
-            # Determine if this is an append operation (end column > start column). If so, prefix with ';'
-            prefix=$(echo $kak_selections_display_column_desc | awk -F '[.,]' '{if($4 > $2) {print ";"}}')
-            if [ $tabstop -eq 0 ]; then
-                # if tabstop is 0 that means we are just inserting tabs
-                printf "execute-keys '${prefix}i<tab><esc>'\n"
-                # expand tabs to spaces if needed
-                [ $kak_opt_expandtab = "true" ] && printf "%s\n" 'execute-keys h<ret>@'
-            else
-                # compute the number of spaces needed to reach the next softtabstop
-                display_column=$((kak_cursor_display_column - 1)) # adjust for 1-based indexing
-                end_column=$((display_column % tabstop))
-                space_count=$((tabstop - end_column))
-                # insert enough spaces to reach the next softtabstop
-                printf "execute-keys '${prefix}i%${space_count}s<esc>'\n"
-                # if not expanding tabs, convert *all* preceding whitespace to a mix of spaces and
-                # tabs, not just the spaces that were inserted (this is how vim behaves)
-                [ $kak_opt_expandtab = "false" ] && printf "execute-keys '<a-?>\h+<ret><a-:>H<a-@>'"
-            fi
-        }
+        if [ $kak_opt_indentwidth -eq 0 ]; then
+            echo "execute-keys <tab>"
+        else
+            printf "execute-keys '""%$kak_opt_indentwidth""s'\n"
+        fi
     }
 }
 
-# Helper function for deleting whitespace a <tab>
-def softtabstop-insert-backspace -hidden %{
-    evaluate-commands -no-hooks -draft -itersel -save-regs ^ %{
-        # save off the current selection in case the try block fails
-        try %sh{
-            tabstop=$kak_opt_softtabstop
-            if [ $tabstop -lt 0 ]; then
-                tabstop=$kak_opt_indentwidth
-            fi
-            if [ $tabstop -gt 0 ]; then
-                # compute the end display column based on tabstop and the number of
-                # number spaces needed to reach it
-                display_column=$((kak_cursor_display_column - 1)) # adjust for 1-based indexing
-                num_spaces=$((display_column % tabstop))
-                [ $num_spaces -eq 0 ] && num_spaces=$tabstop
-                end_display_column=$((display_column - num_spaces))
-                # extract any preceding whitespace
-                echo "evaluate-commands -draft %{
-                    execute-keys '<a-?>\h+<ret><a-;>H'
-                    echo -to-file $kak_response_fifo %val{selection}
-                }" > $kak_command_fifo
-                whitespace="$(cat $kak_response_fifo)"
-                # count the number of mixed tabs and spaces needed to reach the end display column
-                tab=$(printf "\t")
-                num_whitespaces=0
-                adjust_cursor="<a-:>;"
-                while [ -z "$non_ws" ] \
-                    && [ -n "$whitespace" ] \
-                    && [ $display_column -gt $end_display_column ];
-                do
-                    # iterate over the whitespace right-to-left, early out after reaching the
-                    # first non whitespace
-                    prefix=${whitespace%?};
-                    ws="${whitespace#$prefix}";
-                    case "$ws" in
-                        $tab) display_column=$((display_column - $kak_opt_tabstop));
-                              # the first whitespace encountered is a tab. when '@' is pressed, the
-                              # cursor moves (or extends) one char to the right. account for this here
-                              [ $num_whitespaces -eq 0 ] && adjust_cursor="${adjust_cursor}h";;
-                         " ") display_column=$((display_column - 1));;
-                           *) non_ws="true";;
-                    esac
-                    whitespace=$prefix;
-                    if [ -z "$non_ws" ]; then
-                        num_whitespaces=$((num_whitespaces + 1));
-                    fi
-                done
-                if [ $num_whitespaces -gt 0 ]; then
-                    # * select the number of mixed tabs and spaces computed above
-                    # * convert to spaces and adjust the cursor position
-                    # * select the number of spaces to reach the end column and delete them
-                    echo "execute-keys '<a-:>;h<a-?>\h{$((num_whitespaces - 1))}<ret>@${adjust_cursor}<a-?> {,$((num_spaces - 1))}<ret>d'"
-                else
-                    echo "fail"
-                fi
-            else
-                echo "fail"
-            fi
-        } catch %{
-            # in normal mode, delete previous character
-            execute-keys 'hd'
-        }
-    }
+def insert-tab-mapping -hidden -params 1 %{
+    %arg{1} window insert <tab> '<a-;><a-gt>'
+    %arg{1} window insert <s-tab> '<a-;><a-lt>'
 }
 
-# Use a hook to enable/disable key mappings such that '\' properly allows disabling specialized <tab> behavior
-hook global ModeChange 'push:.+:insert' %{
-    map buffer insert <tab> '<a-;>:softtabstop-insert-tab<ret>'
-    map buffer insert <backspace> '<a-;>:softtabstop-insert-backspace<ret>'
-}
-hook global ModeChange 'pop:insert:normal' %{
-    unmap buffer insert <tab> '<a-;>:softtabstop-insert-tab<ret>'
-    unmap buffer insert <backspace> '<a-;>:softtabstop-insert-backspace<ret>'
-}
+map global insert <tab> '<a-;>:insert-tab<ret>'
+hook global ModeChange 'push:.+:insert' %{ insert-tab-mapping 'map' }
+hook global ModeChange 'pop:insert:normal' %{ insert-tab-mapping 'unmap' }
 
-# TMUX
+# tmux
 # ────
+
 hook global ModuleLoaded tmux %{
     define-command vsplit -docstring "split tmux vertically with `tmux-terminal-horizontal`" \
     -params .. -command-completion %{
@@ -377,3 +184,58 @@ hook global ModuleLoaded tmux %{
     }
 }
 
+# fzf with tmux
+# ─────────────
+
+define-command -docstring 'Invoke fzf to open a file' -params 0 fzf-edit %{
+    evaluate-commands %sh{
+        if [ -z "${kak_client_env_TMUX}" ]; then
+            printf 'fail "client was not started under tmux"\n'
+        else
+            file="$(find . -type f |TMUX="${kak_client_env_TMUX}" fzf-tmux -d 15)"
+            if [ -n "$file" ]; then
+                printf 'edit "%s"\n' "$file"
+            fi
+        fi
+    }
+}
+
+# the original version no longer works since kak_buflist is no longer ":" separated.
+# this one works even you have single quote or newline in file names.
+
+define-command -docstring 'Invoke fzf to select a buffer' fzf-buffer %{
+    evaluate-commands %sh{
+        BUFFER=$(
+            (
+                eval "set -- $kak_buflist"
+                while [ $# -gt 0 ]; do
+                    printf "%s\0" "$1"
+                    shift
+                done
+            ) |
+            fzf-tmux -d 15 --read0
+        )
+        BUFFER=${BUFFER/\'/\'\'}
+        if [ -n "$BUFFER" ]; then
+            printf "buffer '%s'" "${BUFFER}"
+        fi
+    }
+}
+
+# Fuzzy find and grep
+# ───────────────────
+
+define-command -hidden open_buffer_picker %{
+  prompt buffer: -menu -buffer-completion %{
+    buffer %val{text}
+  }
+}
+
+define-command -hidden open_file_picker %{
+  prompt file: -menu -shell-script-candidates 'fd --type=file' %{
+    edit -existing %val{text}
+  }
+}
+
+map global user f ':open_file_picker<ret>'
+map global user r ':grep '

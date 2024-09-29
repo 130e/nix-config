@@ -107,7 +107,7 @@
     '';
     shellAliases = {
       l = "ls -ahl";
-      ll = "ls -l";
+      ll = "ls -ahl --color=never";
     };
   };
 
@@ -146,40 +146,44 @@
 
   home.packages = with pkgs; [
     # General coding
-    python3
     gcc
     gnumake
+    python3
+    # Linter
+    python312Packages.flake8
     # Formatter
+    black
     nil
     nixfmt-rfc-style
-    black
+    nodePackages.prettier
     # LSP
     python312Packages.python-lsp-server
     clang-tools
     vscode-langservers-extracted # html/css/json...
 
     # Archive
-    zip
+    p7zip
     unzip
     xz
-    p7zip
+    zip
 
     # Utils
-    tmux
-    git
-    ripgrep
-    tree
     bc
-    unrar-free
+    fd
     ffmpeg
     file
-    fd
+    fzf
+    git
+    ripgrep
+    tmux
+    tree
+    unrar-free
 
     # Network
-    tcpdump
     iperf3
-    qtwirediff
     nmap
+    qtwirediff
+    tcpdump
 
     # Fonts I need fonts for editor :)
     noto-fonts
