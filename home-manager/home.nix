@@ -113,6 +113,14 @@
 
   programs.btop.enable = true;
 
+  programs.bat = {
+    enable = true;
+    config = {
+      pager = "less -FR";
+      theme = "TwoDark";
+    };
+  };
+
   programs.ranger = {
     enable = true;
     settings = {
@@ -156,6 +164,7 @@
     nil
     nixfmt-rfc-style
     nodePackages.prettier
+    shfmt
     # LSP
     python312Packages.python-lsp-server
     clang-tools
@@ -173,8 +182,10 @@
     ffmpeg
     file
     fzf
-    git
+    pandoc
+    pdftk
     ripgrep
+    tectonic
     tmux
     tree
     unrar-free

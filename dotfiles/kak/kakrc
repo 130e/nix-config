@@ -42,10 +42,9 @@ hook global WinSetOption filetype=(c|cpp) %{
 }
 
 hook global WinSetOption filetype=python %{
-    jedi-enable-autocomplete
+    set-option buffer formatcmd 'black -'
     lint-enable
     set-option global lintcmd 'flake8'
-    set-option buffer formatcmd 'black -'
 }
 
 hook global WinSetOption filetype=nix %{

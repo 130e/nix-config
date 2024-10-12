@@ -7,6 +7,9 @@
   pkgs,
   ...
 }:
+let
+  user = "simmer";
+in
 {
   # You can import other NixOS modules here
   imports = [
@@ -180,12 +183,25 @@
   };
 
   programs = {
+    adb.enable = true;
     neovim = {
       enable = true;
       defaultEditor = true;
       vimAlias = true;
     };
     wireshark.enable = true;
+  };
+
+  users.users = {
+    ${user} = {
+      isNormalUser = true;
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "wireshark"
+        "adbusers"
+      ];
+    };
   };
 
   # Copy the NixOS configuration file and link it from the resulting system

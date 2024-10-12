@@ -27,6 +27,7 @@
 @define-color time        @rosewater;
 @define-color textblack   @base;
 @define-color textwhite   @text;
+@define-color idleInhibitorOn   @warning;
 
 /* Reset all styles */
 * {
@@ -207,5 +208,15 @@
 
 #clock.time {
   background: @time;
+  color: @textblack;
+}
+
+#idle_inhibitor.deactivated {
+  background: @unfocused;
+  color: @textwhite;
+}
+
+#idle_inhibitor.activated {
+  background: @idleInhibitorOn;
   color: @textblack;
 }

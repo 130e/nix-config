@@ -40,6 +40,16 @@
           ];
         };
 
+        Surface = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./nixos/Surface
+            ./nixos/configuration.nix
+          ];
+        };
+
         Bowl = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs outputs;
@@ -70,15 +80,35 @@
           ];
         };
 
+        "simmer@Surface" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          extraSpecialArgs = {
+            inherit inputs outputs;
+          };
+          modules = [
+            ./home-manager/simmer.nix
+            ./home-manager/home.nix
+            ./home-manager/desktop.nix
+            ./home-manager/hypr.nix
+          ];
+        };
+
         # Used by home-manager to install a user headless environment
-        # NOTE: update user.nix to the username used
+        # NOTE: sample user.nix
+        # { inputs, pkgs, ...}:
+        # {
+        #   home = {
+        #     username = "simmer";
+        #     homeDirectory = "/home/simmer";
+        #   };
+        # }
         "user" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
           extraSpecialArgs = {
             inherit inputs outputs;
           };
           modules = [
-            ./home-manager/user.nix
+            ./home-manager/user.nix # NOTE: create this
             ./home-manager/home.nix
           ];
         };

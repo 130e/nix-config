@@ -10,7 +10,7 @@
     ./hardware-configuration.nix
   ];
 
-  networking.hostName = "EnvySea"; # Define your hostname.
+  networking.hostName = "Surface"; # Define your hostname.
   networking.networkmanager = {
     enable = true;
     wifi.powersave = true;
@@ -23,9 +23,9 @@
     hyprland.enable = true; # Required by Hyprland
     steam = {
       enable = true;
-      remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-      dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-      localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+      # remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+      # dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+      # localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
     };
   };
 

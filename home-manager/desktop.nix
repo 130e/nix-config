@@ -123,20 +123,14 @@
           (createChromiumExtension {
             # ublock origin
             id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
-            sha256 = "sha256:37992b0b9aa7a6b94f4fdf1385e503f237a55cea593fd1c254e9c02dcc01671a";
-            version = "1.59.0";
+            sha256 = "sha256:39ec73ac4c77cde2b51f852e8ee9e51d079a110d2204962b20770264209bf0c0";
+            version = "1.60.0";
           })
           (createChromiumExtension {
             # Vimium
             id = "dbepggeogbaibhgnhhndojpepiihcmeb";
             sha256 = "sha256:0da10cd4dc8c5fc44c06f5a82153a199f63f69eeba1c235f4459f002e2d41d55";
             version = "2.1.2";
-          })
-          (createChromiumExtension {
-            # Dark reader
-            id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-            sha256 = "sha256:06099ee57eb4b07d6f2331807a3a7ed8b66e90ac2f9f984476489bba623c528f";
-            version = "4.9.90";
           })
           (createChromiumExtension {
             # Privacy badger
@@ -208,6 +202,12 @@
         source = ../dotfiles/kitty;
         recursive = true;
       };
+
+      "rofi" = {
+        source = ../dotfiles/rofi;
+        recursive = true;
+      };
+
       # Set Kvantum theme declaratively and as readonly
       # "Kvantum/kvantum.kvconfig".text = ''
       #   [General]
@@ -251,7 +251,7 @@
           "kakoune.desktop"
           "Helix.desktop"
         ];
-        "text/*" = [
+        "text/markdown" = [
           "kakoune.desktop"
           "Helix.desktop"
         ];
