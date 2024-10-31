@@ -4,7 +4,7 @@
 EXTENSION_IDs=(
     "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
     "dbepggeogbaibhgnhhndojpepiihcmeb" # Vimium
-    # "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
+    "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
     "pkehgijcmpdhfbdbbnkijodmdjhbjlgp" # Privacy Badger
 )
 BROWSER_VERSION="129.0"

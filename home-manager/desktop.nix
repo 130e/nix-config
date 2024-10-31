@@ -138,6 +138,12 @@
             sha256 = "sha256:1f0483a03a92466bbdc47c05eac81931ea6d54f32851f7c8e55cb62ff651584b";
             version = "2024.7.17";
           })
+          (createChromiumExtension {
+            # Dark Reader
+            id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
+            sha256 = "sha256:f7cb060a8d9d1be5d833305e2d1fb5d087390cb8c35e14a1d43cdab4b382c904";
+            version = "4.9.95";
+          })
         ];
       # If not using ungoogled-chromium:
       # extensions = [
@@ -167,21 +173,22 @@
       };
     };
 
-    qutebrowser = {
-      enable = true;
-      searchEngines = {
-        DEFAULT = "https://search.brave.com/search?q={}";
-        g = "https://www.google.com/search?hl=en&q={}";
-        spg = "https://www.startpage.com/sp/search?query={}";
-        nxp = "https://search.nixos.org/packages?channel=unstable&type=packages&query={}";
-        hm = "https://home-manager-options.extranix.com/?query={}";
-      };
-      extraConfig = ''
-        c.content.pdfjs = True
-        c.auto_save.session = True
-        c.session.lazy_restore = True
-      '';
-    };
+    # pyqt bug
+    # qutebrowser = {
+    #   enable = true;
+    #   searchEngines = {
+    #     DEFAULT = "https://search.brave.com/search?q={}";
+    #     g = "https://www.google.com/search?hl=en&q={}";
+    #     spg = "https://www.startpage.com/sp/search?query={}";
+    #     nxp = "https://search.nixos.org/packages?channel=unstable&type=packages&query={}";
+    #     hm = "https://home-manager-options.extranix.com/?query={}";
+    #   };
+    #   extraConfig = ''
+    #     c.content.pdfjs = True
+    #     c.auto_save.session = True
+    #     c.session.lazy_restore = True
+    #   '';
+    # };
 
     zathura = {
       enable = true;
@@ -190,7 +197,8 @@
         recolor-darkcolor = "#dcd7ba";
         recolor-lightcolor = "#1f1f28";
         recolor-keephue = true;
-        font = "OpenDyslexic Nerd Font";
+        # font = "OpenDyslexic Nerd Font";
+        selection-clipboard = "clipboard";
       };
     };
   };
