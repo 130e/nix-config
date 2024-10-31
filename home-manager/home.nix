@@ -169,6 +169,8 @@
     python312Packages.python-lsp-server
     clang-tools
     vscode-langservers-extracted # html/css/json...
+    # Checker
+    shellharden
 
     # Archive
     p7zip
