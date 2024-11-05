@@ -30,7 +30,7 @@
       xfce.thunar
       swappy
       # remmina
-      # lutris
+      lutris
       steam-run
     ];
     # Force app to use wayland; doesn't work most of time
