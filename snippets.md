@@ -1,5 +1,9 @@
 # Code snippets & Notes
 
+## Power saving
+
+tlp utilities for turning dev on and off `wifi, nfc, bluetooth`.
+
 ## Nixos
 
 ```nix
