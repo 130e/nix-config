@@ -80,7 +80,8 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Set your time zone.
-  time.timeZone = "America/Los_Angeles";
+  # time.timeZone = "America/Los_Angeles";
+  services.automatic-timezoned.enable = true;
 
   # Select internationalisation properties.
   i18n = {
