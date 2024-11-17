@@ -163,10 +163,13 @@ in
   # Programs
   environment = {
     systemPackages = with pkgs; [
+      # Utilities
       vim
+      git
       wget
       curl
-      git
+      wireshark
+      tcpdump
       # Basic desktop apps
       librewolf
       kitty

@@ -1,5 +1,5 @@
-# EnvySea
-# My main laptop with touch screen
+# Surface go 2
+# Tablet
 {
   inputs,
   pkgs,
@@ -21,12 +21,6 @@
 
   programs = {
     hyprland.enable = true; # Required by Hyprland
-    steam = {
-      enable = true;
-      # remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-      # dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-      # localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-    };
   };
 
   security = {

@@ -108,6 +108,7 @@
     shellAliases = {
       l = "ls -ahl";
       ll = "ls -ahl --color=never";
+      kf = "kak $(fzf)"; # Quick hack
     };
   };
 
