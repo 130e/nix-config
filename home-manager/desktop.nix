@@ -12,6 +12,8 @@
 
   home = {
     packages = with pkgs; [
+      # only office
+      onlyoffice-bin
       # gtk themes
       kanagawa-gtk-theme
       vimix-gtk-themes
