@@ -12,3 +12,8 @@ Base on [nix-starter-configs](https://github.com/Misterio77/nix-starter-configs/
 
 - VSCodium FHS
 - [onlyoffice fonts](https://nixos.wiki/wiki/Onlyoffice)
+
+### GNOME
+
+- Install extension (could be declarative!)
+- set up shortcut...

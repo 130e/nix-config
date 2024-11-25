@@ -1,14 +1,8 @@
 # Surface go 2
 # Tablet
+{ inputs, pkgs, ... }:
 {
-  inputs,
-  pkgs,
-  ...
-}:
-{
-  imports = [
-    ./hardware-configuration.nix
-  ];
+  imports = [ ./hardware-configuration.nix ];
 
   networking.hostName = "Surface"; # Define your hostname.
   networking.networkmanager = {
@@ -19,12 +13,21 @@
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
 
-  programs = {
-    hyprland.enable = true; # Required by Hyprland
-  };
+  # programs = {
+  #   hyprland.enable = true; # Required by Hyprland
+  # };
+  # security = {
+  #   pam.services.hyprlock = { }; # Enable hyprlock to use PAM
+  # };
 
-  security = {
-    pam.services.hyprlock = { }; # Enable hyprlock to use PAM
+  # Display environment
+  services.xserver = {
+    enable = true;
+    displayManager.gdm = {
+      enable = true;
+      wayland = true;
+    };
+    desktopManager.gnome.enable = true;
   };
 
   # Power
