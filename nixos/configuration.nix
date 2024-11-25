@@ -106,6 +106,8 @@ in
     noto-fonts-cjk-sans
     noto-fonts-color-emoji
     # noto-fonts-monochrome-emoji
+    corefonts
+    vistafonts
     noto-fonts-emoji-blob-bin
     (nerdfonts.override {
       fonts = [
