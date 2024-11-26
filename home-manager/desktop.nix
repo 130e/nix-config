@@ -12,7 +12,10 @@
 
   home = {
     packages = with pkgs; [
-      # only office
+      # Utility
+      wl-clipboard
+      # remmina
+      steam-run
       onlyoffice-bin
       # gtk themes
       kanagawa-gtk-theme
@@ -24,26 +27,13 @@
       vimix-cursor-theme
       bibata-cursors
       # Personal APPs
-      rofi-wayland
       drawio
       keepassxc
       kitty
-      # foot
-      xfce.thunar
       swappy
-      # remmina
-      steam-run
     ];
     # Force app to use wayland; doesn't work most of time
     sessionVariables.NIXOS_OZONE_WL = "1";
-  };
-
-  services = {
-    # General
-    network-manager-applet.enable = true; # nm gui
-    blueman-applet.enable = true; # bluetooth gui
-    mpris-proxy.enable = true; # earbud control
-    playerctld.enable = true; # media key
   };
 
   # GTK and QT are configured here
@@ -142,11 +132,6 @@
     configFile = {
       "kitty" = {
         source = ../dotfiles/kitty;
-        recursive = true;
-      };
-
-      "rofi" = {
-        source = ../dotfiles/rofi;
         recursive = true;
       };
 

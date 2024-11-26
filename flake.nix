@@ -37,6 +37,7 @@
           modules = [
             ./nixos/EnvySea
             ./nixos/configuration.nix
+            ./nixos/nixos-desktop.nix
           ];
         };
 
@@ -47,6 +48,7 @@
           modules = [
             ./nixos/Surface
             ./nixos/configuration.nix
+            ./nixos/nixos-desktop.nix
           ];
         };
 
@@ -76,7 +78,6 @@
             ./home-manager/simmer.nix
             ./home-manager/home.nix
             ./home-manager/desktop.nix
-            ./home-manager/hypr.nix
           ];
         };
 

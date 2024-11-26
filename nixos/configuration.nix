@@ -87,7 +87,8 @@ in
   i18n = {
     defaultLocale = "en_US.UTF-8";
     inputMethod = {
-      enabled = "fcitx5";
+      enable = true;
+      type = "fcitx5";
       fcitx5 = {
         waylandFrontend = true;
         addons = with pkgs; [
@@ -130,9 +131,9 @@ in
     };
   };
   security.rtkit.enable = true; # Bluetooth realtime kit
-  services.blueman.enable = true; # blueman applet
+  services.blueman.enable = true; # blueman
 
-  # Enable sound.
+  # Enable sound. Prefer Pipewire
   services.pipewire = {
     enable = true;
     pulse.enable = true;
@@ -172,21 +173,8 @@ in
       git
       wget
       curl
-      wireshark
       tcpdump
-      # Basic desktop apps
-      librewolf
-      kitty
-      xfce.thunar
-      keepassxc
-      # Audio
-      qpwgraph
-      pavucontrol
-      playerctl
-      pamixer
     ];
-    # Force app to use wayland; doesn't work most of time
-    sessionVariables.NIXOS_OZONE_WL = "1";
   };
 
   programs = {
@@ -196,7 +184,7 @@ in
       defaultEditor = true;
       vimAlias = true;
     };
-    wireshark.enable = true;
+    wireshark.enable = true; # Doesn't install by itself
   };
 
   users.users = {

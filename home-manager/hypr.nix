@@ -1,10 +1,6 @@
 # home-manager user environment if using Hyprland
 # NOTE: Hyprland also need to be configured in NixOS configuration
-{
-  pkgs,
-  config,
-  ...
-}:
+{ pkgs, config, ... }:
 {
   programs = {
     waybar.enable = true;
@@ -17,7 +13,7 @@
   home = {
     packages = with pkgs; [
       xdg-utils
-      wl-clipboard
+      rofi-wayland
       swww
       brightnessctl
       hyprcursor
@@ -31,6 +27,10 @@
   };
 
   xdg.configFile = {
+    "rofi" = {
+      source = ../dotfiles/rofi;
+      recursive = true;
+    };
     "dunst" = {
       source = ../dotfiles/dunst;
       recursive = true;
@@ -50,6 +50,12 @@
   # TODO: hypridle doesn't work properly if started manually as systemd service
   # So use HM options to configure
   services = {
+    # General
+    network-manager-applet.enable = true; # nm gui
+    blueman-applet.enable = true; # bluetooth gui
+    mpris-proxy.enable = true; # earbud control
+    playerctld.enable = true; # media key
+
     dunst = {
       enable = true;
       configFile = "$XDG_CONFIG_HOME/dunst/dunstrc";
