@@ -198,6 +198,7 @@
     nmap
     qtwirediff
     tcpdump
+    aircrack-ng
 
     # Fonts I need fonts for editor :)
     noto-fonts

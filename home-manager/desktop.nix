@@ -16,7 +16,6 @@
       wl-clipboard
       # remmina
       steam-run
-      onlyoffice-bin
       # gtk themes
       kanagawa-gtk-theme
       vimix-gtk-themes
@@ -31,6 +30,7 @@
       keepassxc
       kitty
       swappy
+      onlyoffice-bin
     ];
     # Force app to use wayland; doesn't work most of time
     sessionVariables.NIXOS_OZONE_WL = "1";
@@ -67,6 +67,25 @@
     #   # Kvantum theme package can be install as package separately
     # };
   };
+
+  # https://wiki.nixos.org/wiki/GNOME
+  # dconf = {
+  #   enable = true;
+  #   settings = {
+  #     "org/gnome/shell" = {
+  #       disable-user-extensions = false; # enables user extensions
+  #       enabled-extensions = with pkgs.gnomeExtensions; [
+  #         # Put UUIDs of extensions that you want to enable here.
+  #         # If the extension you want to enable is packaged in nixpkgs,
+  #         # you can easily get its UUID by accessing its extensionUuid
+  #         # field (look at the following example).
+  #         im-panel-integrated-with-osk.extensionUuid
+  #         # Alternatively, you can manually pass UUID as a string "impanel-with-osk@52hertz-reunion.site"
+  #       ];
+  #     };
+
+  #   };
+  # };
 
   programs = {
     vscode = {

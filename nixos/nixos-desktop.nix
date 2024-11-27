@@ -8,9 +8,10 @@
   # Programs
   environment = {
     systemPackages = with pkgs; [
-      # Utilities
+      # Utilities intsall syswide
       wireshark
-      aircrack-ng
+      pkgs.gnomeExtensions.im-panel-integrated-with-osk
+      pkgs.gnomeExtensions.kimpanel
     ];
     # Force app to use wayland; doesn't work most of time
     sessionVariables.NIXOS_OZONE_WL = "1";
@@ -34,12 +35,6 @@
   # };
   # security = {
   #   pam.services.hyprlock = { }; # Enable hyprlock to use PAM
-  # };
-
-  # environment = {
-  #   systemPackages = with pkgs; [
-  #     gnomeExtensions.appindicator
-  #   ];
   # };
 
   # Conflict with gnome
