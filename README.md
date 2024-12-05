@@ -15,20 +15,22 @@ Base on [nix-starter-configs](https://github.com/Misterio77/nix-starter-configs/
 
 ## No-reproducibility Hack
 
-- VSCodium FHS plugins
+- VSCodium FHS extensions
 - [onlyoffice fonts](https://nixos.wiki/wiki/Onlyoffice)
 - gnome extension config and shortcuts
 
 ## Desktop
 
-I am a bit tired of configuring my DE and currently using gnome.
+Tired of configuring my DE and currently using gnome.
 
 ### GNOME
 
 The gnome defaults are clean and pretty and I like to use wayland on touchscreen devices.
 
+**TODOs**
+
 - Install extension (could be declarative!)
-- set up shortcut...
+- set up keyboard shortcuts declaratively
 
 ### Hyprland
 
