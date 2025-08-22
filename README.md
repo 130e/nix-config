@@ -4,7 +4,7 @@ Note for myself: No ricing. Reproducible dragon.
 
 The goal is to set up reproducible config for quick boostrapping a new machine and run some experiments.
 
-- [ ] generic laptop setup
+- [x] generic laptop setup
 - [ ] mac mini
 - [ ] Migrate cmdline tool configs from 2024
 - [ ] arm pi setup

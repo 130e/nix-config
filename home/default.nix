@@ -1,21 +1,12 @@
 # Shared home-manager configuration
-{ pkgs, system, ... }:
+{ pkgs, ... }:
 
-let
-  # Import platform-specific configuration based on system
-  platformConfig =
-    if pkgs.lib.hasSuffix "darwin" system then
-      import ./darwin.nix { inherit pkgs; }
-    else
-      import ./nixos.nix { inherit pkgs; };
-in
 {
   home.username = "simmer";
   # Note: homeDirectory will be set by platform-specific files
 
   # Common packages for both platforms
   home.packages = with pkgs; [
-    # Add your common packages here
   ];
 
   # Common programs configuration
@@ -25,7 +16,20 @@ in
     userEmail = "fernival328@gmail.com";
   };
 
+  programs.kakoune = {
+    enable = true;
+    defaultEditor = true;
+  };
+
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    withNodeJs = true;
+    withPython3 = true;
+  };
+
   # Common home-manager settings
   home.stateVersion = "25.05";
 }
-// platformConfig

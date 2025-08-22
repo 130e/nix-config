@@ -45,12 +45,12 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.${user} =
-                { pkgs, ... }:
-                import ./home/default.nix {
-                  inherit pkgs;
-                  system = "x86_64-linux";
-                };
+              home-manager.users.${user} = { pkgs, ... }: {
+                imports = [
+                  ./home/default.nix
+                  ./home/nixos.nix
+                ];
+              };
             }
           ];
         };
@@ -67,12 +67,12 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.${user} =
-                { pkgs, ... }:
-                import ./home/default.nix {
-                  inherit pkgs;
-                  system = "x86_64-darwin";
-                };
+              home-manager.users.${user} = { pkgs, ... }: {
+                imports = [
+                  ./home/default.nix
+                  ./home/darwin.nix
+                ];
+              };
             }
           ];
         };

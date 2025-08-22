@@ -6,7 +6,6 @@
   # Linux-specific packages
   home.packages = with pkgs; [
     # Add Linux-specific packages here
-    # Example: xorg packages, desktop environment packages, etc.
   ];
 
   # Linux-specific programs
