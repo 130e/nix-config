@@ -1,117 +1,66 @@
-# Flake config
+# Why flake?
 # Glue NixOS and home-manager together
-# Manage hosts
+# Pin package versions
+# Easier for multiple machines
 {
-  description = "Nixos config";
+  description = "Nix config for Bootstrapping";
 
   inputs = {
-    # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # Home manager
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    # For specific hardware fix
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    # For mac darwin
+    nix-darwin.url = "github:nix-darwin/nix-darwin/master";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs"; # Make home-manager reuse the same nixpkgs input
+    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      nixos-hardware,
+      nix-darwin,
       home-manager,
-      ...
     }@inputs:
     let
-      inherit (self) outputs;
+      user = "simmer";
     in
     {
-      # NixOS configuration entrypoint
-      # Available through 'nixos-rebuild --flake .#your-hostname'
-      # sudo nixos-rebuild switch --flake ~/nix-config#EnvySea --option eval-cache false --show-trace
+      # Linux hosts
       nixosConfigurations = {
-        # NOTE: replace with your hostname
-        EnvySea = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs outputs;
-          };
-          # > Our main nixos configuration file <
+        # Surface
+        "surface" = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
           modules = [
-            ./nixos/EnvySea
-            ./nixos/configuration.nix
-          ];
-        };
-
-        Surface = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs outputs;
-          };
-          modules = [
-            ./nixos/Surface
-            ./nixos/configuration.nix
-          ];
-        };
-
-        Bowl = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs outputs;
-          };
-          modules = [
-            ./nixos/Bowl
-            ./nixos/configuration.nix
+            ./configuration.nix
+            nixos-hardware.nixosModules.microsoft-surface-go
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.simmer = import ./home.nix;
+            }
           ];
         };
       };
 
-      # Standalone home-manager configuration entrypoint
-      # Available through 'home-manager --flake .#your-username@your-hostname'
-      # home-manager switch --flake ~/nix-config#simmer@EnvySea --option eval-cache false --show-trace
-      homeConfigurations = {
-        # NOTE: replace with your username@hostname
-        "simmer@EnvySea" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = {
-            inherit inputs outputs;
-          };
-          # > Our main home-manager configuration file <
+      # Darwin hosts
+      darwinConfigurations = {
+        # Mac mini 2014
+        "minicube" = nix-darwin.lib.darwinSystem {
           modules = [
-            ./home-manager/simmer.nix
-            ./home-manager/home.nix
-            ./home-manager/desktop.nix
-            ./home-manager/hypr.nix
-          ];
-        };
-
-        "simmer@Surface" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          extraSpecialArgs = {
-            inherit inputs outputs;
-          };
-          modules = [
-            ./home-manager/simmer.nix
-            ./home-manager/home.nix
-            ./home-manager/desktop.nix
-            ./home-manager/hypr.nix
-          ];
-        };
-
-        # Used by home-manager to install a user headless environment
-        # NOTE: sample user.nix
-        # { inputs, pkgs, ...}:
-        # {
-        #   home = {
-        #     username = "simmer";
-        #     homeDirectory = "/home/simmer";
-        #   };
-        # }
-        "user" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-          extraSpecialArgs = {
-            inherit inputs outputs;
-          };
-          modules = [
-            ./home-manager/user.nix # NOTE: create this
-            ./home-manager/home.nix
+            ./configuration.nix
+            ./minicube-configuration.nix
           ];
         };
       };
+
     };
 }

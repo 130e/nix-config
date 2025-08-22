@@ -1,0 +1,24 @@
+# Additional parameters for this machine
+{
+  pkgs,
+  lib,
+  inputs,
+}:
+{
+  # List packages installed in system profile. To search by name, run:
+  # $ nix-env -qaP | grep wget
+  # environment.systemPackages = [ ];
+
+  # Enable alternative shell support in nix-darwin.
+  # programs.fish.enable = true;
+
+  # Set Git commit hash for darwin-version.
+  inputs.system.configurationRevision = self.rev or self.dirtyRev or null;
+
+  # Used for backwards compatibility, please read the changelog before changing.
+  # $ darwin-rebuild changelog
+  inputs.system.stateVersion = 6;
+
+  # The platform the configuration will be used on.
+  inputs.nixpkgs.hostPlatform = "x86_64-darwin";
+};

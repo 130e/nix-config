@@ -1,14 +1,30 @@
-# Personal NixOS config
+# Nix Config
 
-Base on [nix-starter-configs](https://github.com/Misterio77/nix-starter-configs/).
+Note for myself: No ricing. Reproducible dragon.
 
-## To Fix
+The goal is to set up reproducible config for quick boostrapping a new machine and run some experiments.
 
-- nextcloudcmd netrc parse not working
-- autotimezone failed due to geoclue2 not working in nixpkgs (Workaround `sudo timedatectl set-timezone EST`).
-- steam-run libGL: Can't open configuration file /etc/drirc
+- [ ] generic laptop setup
+- [ ] mac mini
+- [ ] Migrate cmdline tool configs from 2024
+- [ ] arm pi setup
+- [ ] macbook pro
+- [ ] nix on droid
 
-## No-reproducibility Hack
+## Device Note
 
-- VSCodium FHS
-- [onlyoffice fonts](https://nixos.wiki/wiki/Onlyoffice)
+### Microsoft Surface GO 2
+
+- (Overnight compile time) Use specific [nixos-hardware](https://wiki.nixos.org/wiki/Hardware/Microsoft/Surface_Go_2) kernel
+
+### Mac Mini 2014
+
+- Experimenting
+
+## Resources
+
+- One of the [nixos wiki](https://wiki.nixos.org/wiki/NixOS_system_configuration)
+- Misterio77 [nix-config](https://github.com/Misterio77/nix-config) & [nix-starter-configs](https://github.com/Misterio77/nix-starter-configs)
+- dustinlyons [nixos-config](https://github.com/dustinlyons/nixos-config)
+- ryan4yin [nix-config](https://github.com/ryan4yin/nix-config/)
+- My overriced config [2024-setup](https://github.com/130e/nix-config/tree/2024-setup)
