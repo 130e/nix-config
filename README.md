@@ -27,4 +27,4 @@ The goal is to set up reproducible config for quick boostrapping a new machine a
 - Misterio77 [nix-config](https://github.com/Misterio77/nix-config) & [nix-starter-configs](https://github.com/Misterio77/nix-starter-configs)
 - dustinlyons [nixos-config](https://github.com/dustinlyons/nixos-config)
 - ryan4yin [nix-config](https://github.com/ryan4yin/nix-config/)
-- My overriced config [2024-setup](https://github.com/130e/nix-config/tree/2024-setup)
+- My overriced config [2024-setup](https://github.com/130e/nix-config/tree/2024-envysea)

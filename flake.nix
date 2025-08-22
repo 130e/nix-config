@@ -39,13 +39,18 @@
         "surface" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            ./configuration.nix
+            ./hosts/nixos-x86/configuration.nix
             nixos-hardware.nixosModules.microsoft-surface-go
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.simmer = import ./home.nix;
+              home-manager.users.${user} =
+                { pkgs, ... }:
+                import ./home/default.nix {
+                  inherit pkgs;
+                  system = "x86_64-linux";
+                };
             }
           ];
         };
@@ -55,9 +60,20 @@
       darwinConfigurations = {
         # Mac mini 2014
         "minicube" = nix-darwin.lib.darwinSystem {
+          system = "x86_64-darwin";
           modules = [
-            ./configuration.nix
-            ./minicube-configuration.nix
+            ./hosts/darwin-x86/configuration.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.${user} =
+                { pkgs, ... }:
+                import ./home/default.nix {
+                  inherit pkgs;
+                  system = "x86_64-darwin";
+                };
+            }
           ];
         };
       };
