@@ -1,15 +1,13 @@
 { pkgs, ... }:
 
 {
-  home.homeDirectory = "/Users/simmer";
+  # home.username = "simmer";
+  # home.homeDirectory = "/Users/simmer";
 
-  # macOS-specific packages
   home.packages = with pkgs; [
-    # Add macOS-specific packages here
+    btop
   ];
 
-  # macOS-specific programs
   programs = {
-    # Add macOS-specific program configurations here
   };
 }

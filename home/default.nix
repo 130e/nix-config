@@ -3,9 +3,8 @@
 
 {
   home.username = "simmer";
-  # Note: homeDirectory will be set by platform-specific files
-
-  # Common packages for both platforms
+  
+  # Common packages
   home.packages = with pkgs; [
   ];
 

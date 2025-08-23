@@ -1,7 +1,3 @@
-# Why flake?
-# Glue NixOS and home-manager together
-# Pin package versions
-# Easier for multiple machines
 {
   description = "Nix config for Bootstrapping";
 
@@ -47,8 +43,8 @@
               home-manager.useUserPackages = true;
               home-manager.users.${user} = { pkgs, ... }: {
                 imports = [
-                  ./home/default.nix
                   ./home/nixos.nix
+                  ./home/default.nix
                 ];
               };
             }
@@ -73,8 +69,10 @@
                   ./home/darwin.nix
                 ];
               };
+              users.users.${user}.home = "/Users/${user}";
             }
           ];
+          specialArgs = { inherit inputs; };
         };
       };
 
