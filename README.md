@@ -12,12 +12,13 @@ The goal is to set up reproducible config for quick boostrapping a new machine a
 - [ ] Split GUI apps between personal/testbed setup
 - [ ] Arm pi setup
 - [ ] Nix on droid
+- [ ] Automate browser extension install
 
 ## Usage
 
 ### Installation
 
-Refer to official wiki for up-to-date installation instructions. 
+Refer to official wiki for up-to-date installation instructions.
 
 ### Update
 
@@ -39,8 +40,10 @@ sudo darwin-rebuild --flake .#hostname switch --show-trace
 
 ### Mac
 
-For mac, use home-manager to install and customize apps. 
+For mac, use home-manager to install and customize apps.
 Leave the native system configurations (docks, etc.) to MacOS.
+
+- [ ] Auto wireshark chmodpkg install?
 
 ## References
 

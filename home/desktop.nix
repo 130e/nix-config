@@ -1,8 +1,9 @@
-{ ... }:
+{ pkgs, ... }:
 {
   home.packages = with pkgs; [
     obsidian
     zotero
+    wireshark
   ];
 
   programs = {
@@ -22,7 +23,7 @@
 
     kitty = {
       enable = true;
-      font.size = 14;
+      # TODO: font
       # shellIntegration.enableZshIntegration = true;
     };
 
@@ -47,9 +48,9 @@
       };
     };
 
-    services = {
-      syncthing.enable = true;
-    };
+  };
 
+  services = {
+    syncthing.enable = true;
   };
 }

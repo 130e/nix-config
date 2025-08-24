@@ -17,12 +17,13 @@
   nix.settings.experimental-features = "nix-command flakes";
 
   # Setuid apps
-  programs = {
-    wireshark = {
-      enable = true;
-      usbmon.enable = true;
-    };
-  };
+  # ws not supported by nix-darwin
+  # programs = {
+  #   wireshark = {
+  #     enable = true;
+  #     usbmon.enable = true;
+  #   };
+  # };
 
   # Set Git commit hash for darwin-version.
   system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
