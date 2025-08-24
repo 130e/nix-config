@@ -47,6 +47,7 @@
   programs.kakoune = {
     enable = true;
     defaultEditor = true;
+    extraConfig = builtins.readFile ../dotfiles/kak/kakrc;
   };
 
   programs.neovim = {

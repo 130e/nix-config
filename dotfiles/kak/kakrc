@@ -1,0 +1,240 @@
+# Editor style
+# ────────────
+colorscheme palenight
+
+# Display the status bar on top
+set-option global ui_options terminal_status_on_top=true
+
+# Always keep one line and three columns displayed around the cursor
+set-option global scrolloff 1,3
+
+# Display line numbers
+hook global WinCreate ^[^*]+$ %{ add-highlighter window/ number-lines -hlcursor }
+
+# Highlight trailing whitespace
+add-highlighter global/ regex \h+$ 0:Error
+
+# Highlight keywords
+add-highlighter global/ regex \b(TODO|NOTE|FIXME)\b 0:default+rb
+
+# Highlight all matched selection
+set-face global CurSearch +bu
+hook global RegisterModified '/' %{ add-highlighter -override global/search regex "%reg{/}" 0:CurSearch }
+
+# Softwrap long lines
+add-highlighter global/ wrap -word -indent
+
+# grep command
+set-option global grepcmd 'rg --column'
+
+# Enable editor config
+# ────────────────────
+
+hook global BufOpenFile .* %{ editorconfig-load }
+hook global BufNewFile .* %{ editorconfig-load }
+
+hook global WinSetOption filetype=(c|cpp) %{
+    clang-enable-autocomplete
+    clang-enable-diagnostics
+    alias window lint clang-parse
+    alias window lint-next-error clang-diagnostics-next
+    set-option buffer formatcmd 'clang-format'
+}
+
+hook global WinSetOption filetype=python %{
+    set-option buffer formatcmd 'black -'
+    lint-enable
+    set-option global lintcmd 'flake8'
+}
+
+hook global WinSetOption filetype=nix %{
+    set-option buffer formatcmd "nixfmt"
+    hook buffer -group format BufWritePre .* format
+}
+
+hook global WinSetOption filetype=(javascript|typescript|css|scss|json|jsonc|markdown|yaml|html) %{
+    set-option buffer formatcmd "prettier --stdin-filepath=%val{buffile}"
+    hook buffer -group format BufWritePre .* format
+}
+
+map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>,<lt>/([\w.]+)\b[^>]*?(?<lt>!/)><ret>}
+
+map global normal <c-I> :format<ret>
+
+# cursor config
+# ───────────────────────────────────
+
+# Highlight the word under the cursor
+set-face global CurWord +b
+
+# Switch cursor style to underscore in insert mode
+hook global InsertIdle .* %{
+    set-face window PrimaryCursor default,default+u
+    set-face window PrimaryCursorEol default,default+u
+}
+
+hook global NormalIdle .* %{
+    eval -draft %{ try %{
+        exec ,<a-i>w <a-k>\A\w+\z<ret>
+        add-highlighter -override global/curword regex "\b\Q%val{selection}\E\b" 0:CurWord
+    } catch %{
+        add-highlighter -override global/curword group
+    } }
+    set-face window PrimaryCursor default,default+r
+    set-face window PrimaryCursorEol default,default+r
+}
+
+# Switch cursor color in insert mod
+# (Not very useful if cursor shape is underscore)
+set-face global InsertCursor default,green+B
+
+hook global ModeChange .*:.*:insert %{
+    set-face window PrimaryCursor InsertCursor
+    set-face window PrimaryCursorEol InsertCursor
+
+}
+
+hook global ModeChange .*:insert:.* %{ try %{
+    unset-face window PrimaryCursor
+    unset-face window PrimaryCursorEol
+} }
+
+# System clipboard handling
+# ─────────────────────────
+
+# Wayland system clipboard
+# https://github.com/mawww/kakoune/wiki/Registers---Clipboard#to-yank-copy
+hook global RegisterModified '"' %{ nop %sh{
+    if [ -n "$DISPLAY" ]; then
+        printf %s "$kak_main_reg_dquote" | wl-copy > /dev/null 2>&1 &
+    elif [ -n "$TMUX" ]; then
+        tmux set-buffer -- "$kak_main_reg_dquote"
+    fi
+}}
+
+map global user P '!wl-paste -n<ret>'
+map global user p '<a-!>wl-paste -n<ret>'
+map global user R '|wl-paste -n<ret>'
+
+# Various mappings
+# ────────────────
+
+map global normal '#' :comment-line<ret>
+map global normal <c-/> :comment-line<ret>
+
+map global user -docstring 'next lint error' n ':lint-next-error<ret>'
+map global normal <c-p> :lint<ret>
+
+# Enable <tab>/<s-tab> for insert completion selection
+# ──────────────────────────────────────────────────────
+
+hook global InsertCompletionShow .* %{ map window insert <tab> <c-n>; map window insert <s-tab> <c-p> }
+hook global InsertCompletionHide .* %{ unmap window insert <tab> <c-n>; unmap window insert <s-tab> <c-p> }
+
+# Helper commands
+# ───────────────
+
+define-command find -params 1 %{ edit %arg{1} }
+complete-command -menu find shell-script-candidates %{ find . -type f }
+
+define-command mkdir %{ nop %sh{ mkdir -p $(dirname $kak_buffile) } }
+
+# Smarttab
+# ────────
+
+def insert-tab -hidden %{
+    # Fallback to insert <tab> or <space>s based on indentwidth
+    # when hooks are disabled with '\'
+    evaluate-commands %sh{
+        if [ $kak_opt_indentwidth -eq 0 ]; then
+            echo "execute-keys <tab>"
+        else
+            printf "execute-keys '""%$kak_opt_indentwidth""s'\n"
+        fi
+    }
+}
+
+def insert-tab-mapping -hidden -params 1 %{
+    %arg{1} window insert <tab> '<a-;><a-gt>'
+    %arg{1} window insert <s-tab> '<a-;><a-lt>'
+}
+
+map global insert <tab> '<a-;>:insert-tab<ret>'
+hook global ModeChange 'push:.+:insert' %{ insert-tab-mapping 'map' }
+hook global ModeChange 'pop:insert:normal' %{ insert-tab-mapping 'unmap' }
+
+# tmux
+# ────
+
+hook global ModuleLoaded tmux %{
+    define-command vsplit -docstring "split tmux vertically with `tmux-terminal-horizontal`" \
+    -params .. -command-completion %{
+        tmux-terminal-horizontal kak -c %val{session} -e "%arg{@}"
+    }
+
+    define-command split -docstring "split tmux horizontally with `tmux-terminal-vertical`" \
+    -params .. -command-completion %{
+        tmux-terminal-vertical kak -c %val{session} -e "%arg{@}"
+    }
+
+    define-command tabnew -docstring "create new tmux window with `tmux-terminal-window`" \
+    -params .. -command-completion %{
+        tmux-terminal-window kak -c %val{session} -e "%arg{@}"
+    }
+}
+
+# fzf with tmux
+# ─────────────
+
+define-command -docstring 'Invoke fzf to open a file' -params 0 fzf-edit %{
+    evaluate-commands %sh{
+        if [ -z "${kak_client_env_TMUX}" ]; then
+            printf 'fail "client was not started under tmux"\n'
+        else
+            file="$(find . -type f |TMUX="${kak_client_env_TMUX}" fzf-tmux -d 15)"
+            if [ -n "$file" ]; then
+                printf 'edit "%s"\n' "$file"
+            fi
+        fi
+    }
+}
+
+# the original version no longer works since kak_buflist is no longer ":" separated.
+# this one works even you have single quote or newline in file names.
+
+define-command -docstring 'Invoke fzf to select a buffer' fzf-buffer %{
+    evaluate-commands %sh{
+        BUFFER=$(
+            (
+                eval "set -- $kak_buflist"
+                while [ $# -gt 0 ]; do
+                    printf "%s\0" "$1"
+                    shift
+                done
+            ) |
+            fzf-tmux -d 15 --read0
+        )
+        BUFFER=${BUFFER/\'/\'\'}
+        if [ -n "$BUFFER" ]; then
+            printf "buffer '%s'" "${BUFFER}"
+        fi
+    }
+}
+
+# Fuzzy find and grep
+# ───────────────────
+
+define-command -hidden open_buffer_picker %{
+  prompt buffer: -menu -buffer-completion %{
+    buffer %val{text}
+  }
+}
+
+define-command -hidden open_file_picker %{
+  prompt file: -menu -shell-script-candidates 'fd --type=file' %{
+    edit -existing %val{text}
+  }
+}
+
+map global user f ':open_file_picker<ret>'
+map global user r ':grep '

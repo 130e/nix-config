@@ -1,5 +1,10 @@
 { ... }:
 {
+  home.packages = with pkgs; [
+    obsidian
+    zotero
+  ];
+
   programs = {
 
     librewolf = {
@@ -17,8 +22,33 @@
 
     kitty = {
       enable = true;
-      # font.size = 14;
+      font.size = 14;
       # shellIntegration.enableZshIntegration = true;
+    };
+
+    keepassxc = {
+      enable = true;
+      settings = {
+        GUI = {
+          MinimizeToTray = true;
+          MinimizeOnClose = true;
+          ColorPasswords = true;
+          CompactMode = true;
+        };
+        Security = {
+          ClearClipboardTimeout = 30;
+          LockDatabaseScreenLock = false;
+        };
+        Browser = {
+          Enabled = true;
+          UpdateBinaryPath = false;
+          # UseCustomBrowser = ""; # TODO
+        };
+      };
+    };
+
+    services = {
+      syncthing.enable = true;
     };
 
   };

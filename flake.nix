@@ -31,8 +31,10 @@
     {
       # Linux hosts
       nixosConfigurations = {
+
         "surface" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
+          specialArgs = { inherit username inputs; };
           modules = [
             ./hosts/nixos-x86/configuration.nix
             nixos-hardware.nixosModules.microsoft-surface-go
@@ -40,21 +42,17 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.${username} =
-                { pkgs, ... }:
-                {
-                  imports = [
-                    ./home/default.nix
-                    ./home/nixos.nix
-                  ];
-                };
+              home-manager.extraSpecialArgs = { inherit username inputs; };
+              home-manager.users.${username} = ./home/nixos.nix;
             }
           ];
         };
+        
       };
 
       # Darwin hosts (x86)
       darwinConfigurations = {
+
         "minicube" = nix-darwin.lib.darwinSystem {
           system = "x86_64-darwin";
           specialArgs = { inherit username inputs; };
