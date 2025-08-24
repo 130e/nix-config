@@ -31,7 +31,6 @@
     {
       # Linux hosts
       nixosConfigurations = {
-        # Surface
         "surface" = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
@@ -41,39 +40,56 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.${user} = { pkgs, ... }: {
-                imports = [
-                  ./home/nixos.nix
-                  ./home/default.nix
-                ];
-              };
+              home-manager.users.${user} =
+                { pkgs, ... }:
+                {
+                  imports = [
+                    ./home/default.nix
+                    ./home/nixos.nix
+                  ];
+                };
             }
           ];
         };
       };
 
-      # Darwin hosts
+      # Darwin hosts (x86)
       darwinConfigurations = {
-        # Mac mini 2014
         "minicube" = nix-darwin.lib.darwinSystem {
           system = "x86_64-darwin";
+          specialArgs = inputs // {
+            inherit user;
+          };
           modules = [
             ./hosts/darwin-x86/configuration.nix
             home-manager.darwinModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.${user} = { pkgs, ... }: {
-                imports = [
-                  ./home/default.nix
-                  ./home/darwin.nix
-                ];
-              };
-              users.users.${user}.home = "/Users/${user}";
+              home-manager.extraSpecialArgs = specialArgs;
+              home-manager.users.${user} = ./home/darwin.nix;
             }
           ];
           specialArgs = { inherit inputs; };
         };
+
+        "pro4port" = nix-darwin.lib.darwinSystem {
+          system = "x86_64-darwin";
+          specialArgs = inputs // {
+            inherit user;
+          };
+          modules = [
+            ./hosts/darwin-x86/configuration.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = specialArgs;
+              home-manager.users.${user} = ./home/darwin.nix;
+            }
+          ];
+        };
+
       };
 
     };

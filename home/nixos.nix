@@ -1,11 +1,12 @@
-{ pkgs, ... }:
+{ username, ... }:
 
 {
-  home.homeDirectory = "/home/simmer";
+  # Other modules
+  imports = [ ./core.nix ];
 
-  home.packages = with pkgs; [
-  ];
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
 
-  programs = {
-  };
+  # Common home-manager settings
+  home.stateVersion = "25.05";
 }

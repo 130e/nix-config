@@ -1,0 +1,71 @@
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    # Network
+    nmap
+    netcat
+    iperf3
+    tcpdump
+
+    # Utils
+    jq
+    fzf
+    ripgrep
+    file
+    which
+    tree
+
+    # Archive
+    p7zip
+    unzip
+    xz
+    zip
+
+    # Formatter
+    black
+    nixfmt
+
+    # Misc
+    fastfetch
+    btop
+    cowsay
+    glow
+  ];
+
+  programs.git = {
+    enable = true;
+    userName = "130e";
+    userEmail = "fernival328@gmail.com";
+  };
+
+  programs.tmux = {
+    enable = true;
+    mouse = true;
+  };
+
+  programs.kakoune = {
+    enable = true;
+    defaultEditor = true;
+  };
+
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    withNodeJs = true;
+    withPython3 = true;
+  };
+
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+  };
+
+  programs.starship = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+  };
+}
