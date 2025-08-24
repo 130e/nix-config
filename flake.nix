@@ -26,7 +26,7 @@
       home-manager,
     }@inputs:
     let
-      user = "simmer";
+      username = "simmer";
     in
     {
       # Linux hosts
@@ -40,7 +40,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.${user} =
+              home-manager.users.${username} =
                 { pkgs, ... }:
                 {
                   imports = [
@@ -57,35 +57,17 @@
       darwinConfigurations = {
         "minicube" = nix-darwin.lib.darwinSystem {
           system = "x86_64-darwin";
-          specialArgs = inputs // {
-            inherit user;
-          };
+          specialArgs = { inherit username inputs; };
           modules = [
             ./hosts/darwin-x86/configuration.nix
             home-manager.darwinModules.home-manager
             {
+              # https://github.com/nix-community/home-manager/issues/6036
+              users.users.${username}.home = "/Users/${username}";
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = specialArgs;
-              home-manager.users.${user} = ./home/darwin.nix;
-            }
-          ];
-          specialArgs = { inherit inputs; };
-        };
-
-        "pro4port" = nix-darwin.lib.darwinSystem {
-          system = "x86_64-darwin";
-          specialArgs = inputs // {
-            inherit user;
-          };
-          modules = [
-            ./hosts/darwin-x86/configuration.nix
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = specialArgs;
-              home-manager.users.${user} = ./home/darwin.nix;
+              home-manager.extraSpecialArgs = { inherit username inputs; };
+              home-manager.users.${username} = ./home/darwin.nix;
             }
           ];
         };

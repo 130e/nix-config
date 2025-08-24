@@ -2,7 +2,10 @@
 
 {
   # Other modules
-  imports = [ ./core.nix ];
+  imports = [
+    ./core.nix
+    ./desktop.nix
+  ];
 
   home.username = username;
   home.homeDirectory = "/Users/${username}";
