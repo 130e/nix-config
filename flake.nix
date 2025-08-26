@@ -36,7 +36,7 @@
           system = "x86_64-linux";
           specialArgs = { inherit username inputs; };
           modules = [
-            ./hosts/nixos-x86/configuration.nix
+            ./hosts/nixos/configuration.nix
             nixos-hardware.nixosModules.microsoft-surface-go
             home-manager.nixosModules.home-manager
             {
@@ -47,7 +47,7 @@
             }
           ];
         };
-        
+
       };
 
       # Darwin hosts (x86)
@@ -57,7 +57,7 @@
           system = "x86_64-darwin";
           specialArgs = { inherit username inputs; };
           modules = [
-            ./hosts/darwin-x86/configuration.nix
+            ./hosts/darwin/configuration.nix
             home-manager.darwinModules.home-manager
             {
               # https://github.com/nix-community/home-manager/issues/6036

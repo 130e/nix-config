@@ -4,6 +4,7 @@
     obsidian
     zotero
     wireshark
+    remmina
   ];
 
   programs = {
@@ -24,7 +25,15 @@
     kitty = {
       enable = true;
       # TODO: font
-      # shellIntegration.enableZshIntegration = true;
+      shellIntegration.mode = enabled;
+      keybindings = {
+        "cmd+t" = "new_tab_with_cwd";
+        "cmd+w" = "close_tab";
+      };
+      settings = {
+        font_size = 14;
+        shell = zsh;
+      };
     };
 
     keepassxc = {
