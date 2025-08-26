@@ -5,6 +5,7 @@
     zotero
     wireshark
     remmina
+    freerdp
   ];
 
   programs = {
@@ -24,15 +25,14 @@
 
     kitty = {
       enable = true;
-      # TODO: font
-      shellIntegration.mode = enabled;
+      shellIntegration.mode = "enabled"; # TOFIX: not right
       keybindings = {
         "cmd+t" = "new_tab_with_cwd";
         "cmd+w" = "close_tab";
       };
       settings = {
         font_size = 14;
-        shell = zsh;
+        notify_on_cmd_finish = "unfocused";
       };
     };
 

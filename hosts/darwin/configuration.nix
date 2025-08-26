@@ -16,6 +16,11 @@
   # Necessary for using flakes on this system.
   nix.settings.experimental-features = "nix-command flakes";
 
+  programs.bash = {
+    enable = true;
+    completion.enable = true;
+  };
+
   # Setuid apps
   # ws not supported by nix-darwin
   # programs = {

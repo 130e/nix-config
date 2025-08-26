@@ -43,7 +43,9 @@ sudo darwin-rebuild --flake .#hostname switch --show-trace
 For mac, use home-manager to install and customize apps.
 Leave the native system configurations (docks, etc.) to MacOS.
 
-- [ ] Auto wireshark chmodpkg install?
+- [ ] Auto wireshark chmodpkg install
+
+**Note:** There is an [issue] using zsh with home-manager config in MacOS, due to how MacOS handles PATH with [path_helper](https://gist.github.com/Linerre/f11ad4a6a934dcf01ee8415c9457e7b2).
 
 ## References
 

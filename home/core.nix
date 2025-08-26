@@ -59,14 +59,24 @@
     withPython3 = true;
   };
 
+  programs.bash = {
+    enable = true;
+    enableCompletion = true; # Note: Also need to enable in system configuration
+    shellAliases = {
+      ll = "ls -l";
+      ".." = "cd ..";
+    };
+  };
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    autosuggestions.enable = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     shellAliases = {
       ll = "ls -l";
-      # update = "sudo nixos-rebuild switch";
+      ".." = "cd ..";
+      kf = "kak $(fzf)"; # Hardcoded
     };
     history.size = 10000;
   };
