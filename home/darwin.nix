@@ -5,6 +5,7 @@
   imports = [
     ./core.nix
     ./desktop.nix
+    ./personal.nix
   ];
 
   home.username = username;

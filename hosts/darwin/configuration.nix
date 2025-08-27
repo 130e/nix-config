@@ -6,30 +6,32 @@
   ...
 }:
 {
+  nix = {
+    # Necessary for using flakes on this system.
+    settings.experimental-features = "nix-command flakes";
+    optimise.automatic = true;
+    gc = {
+      automatic = true;
+      interval = {
+        Weekday = 0;
+        Hour = 0;
+        Minute = 0;
+      };
+      options = "--delete-older-than 14d";
+    };
+  };
+
   # Allow unfree
   nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
-  environment.systemPackages = [ ];
-
-  # Necessary for using flakes on this system.
-  nix.settings.experimental-features = "nix-command flakes";
-
-  programs.bash = {
-    enable = true;
-    completion.enable = true;
-  };
+  environment.systemPackages = with pkgs; [ wireshark ];
 
   # Setuid apps
-  # ws not supported by nix-darwin
-  # programs = {
-  #   wireshark = {
-  #     enable = true;
-  #     usbmon.enable = true;
-  #   };
-  # };
+  # NOTE: wireshark options not supported in nix-darwin
 
+  # TODO: why?
   # Set Git commit hash for darwin-version.
   system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
 

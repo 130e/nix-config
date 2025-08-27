@@ -1,11 +1,6 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    obsidian
-    zotero
-    wireshark
-    remmina
-    freerdp
   ];
 
   programs = {
@@ -33,27 +28,6 @@
       settings = {
         font_size = 14;
         notify_on_cmd_finish = "unfocused";
-      };
-    };
-
-    keepassxc = {
-      enable = true;
-      settings = {
-        GUI = {
-          MinimizeToTray = true;
-          MinimizeOnClose = true;
-          ColorPasswords = true;
-          CompactMode = true;
-        };
-        Security = {
-          ClearClipboardTimeout = 30;
-          LockDatabaseScreenLock = false;
-        };
-        Browser = {
-          Enabled = true;
-          UpdateBinaryPath = false;
-          # UseCustomBrowser = ""; # TODO
-        };
       };
     };
 

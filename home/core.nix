@@ -61,7 +61,7 @@
 
   programs.bash = {
     enable = true;
-    enableCompletion = true; # Note: Also need to enable in system configuration
+    enableCompletion = true; # TOFIX: Need OS config. Check source
     shellAliases = {
       ll = "ls -l";
       ".." = "cd ..";

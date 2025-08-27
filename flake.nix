@@ -27,34 +27,12 @@
     }@inputs:
     let
       username = "simmer";
-    in
-    {
-      # Linux hosts
-      nixosConfigurations = {
 
-        "surface" = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = { inherit username inputs; };
-          modules = [
-            ./hosts/nixos/configuration.nix
-            nixos-hardware.nixosModules.microsoft-surface-go
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = { inherit username inputs; };
-              home-manager.users.${username} = ./home/nixos.nix;
-            }
-          ];
-        };
-
-      };
-
-      # Darwin hosts (x86)
-      darwinConfigurations = {
-
-        "minicube" = nix-darwin.lib.darwinSystem {
-          system = "x86_64-darwin";
+      # Create nix-darwin system configuration
+      mkDarwinSystem =
+        { hostname, system }:
+        nix-darwin.lib.darwinSystem {
+          inherit system;
           specialArgs = { inherit username inputs; };
           modules = [
             ./hosts/darwin/configuration.nix
@@ -70,6 +48,57 @@
           ];
         };
 
+      # Create NixOS system configuration
+      mkNixosSystem =
+        {
+          hostname,
+          system,
+          hardwareModules ? [ ],
+          extraModules ? [ ],
+        }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit username inputs; };
+          modules = [
+            ./hosts/nixos/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit username inputs; };
+              home-manager.users.${username} = ./home/nixos.nix;
+            }
+          ]
+          ++ hardwareModules
+          ++ extraModules;
+        };
+
+    in
+    {
+      # Linux hosts
+      nixosConfigurations = {
+        "surface" = mkNixosSystem {
+          hostname = "surface";
+          system = "x86_64-linux";
+          hardwareModules = [
+            nixos-hardware.nixosModules.microsoft-surface-go
+          ];
+          extraModules = [
+            ./hosts/nixos/surface
+          ];
+        };
+      };
+
+      # Darwin hosts
+      darwinConfigurations = {
+        "minicube" = mkDarwinSystem {
+          hostname = "minicube";
+          system = "x86_64-darwin";
+        };
+        "pro4port" = mkDarwinSystem {
+          hostname = "pro4port";
+          system = "x86_64-darwin";
+        };
       };
 
     };
