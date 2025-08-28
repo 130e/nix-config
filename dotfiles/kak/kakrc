@@ -44,7 +44,7 @@ hook global WinSetOption filetype=(c|cpp) %{
 hook global WinSetOption filetype=python %{
     set-option buffer formatcmd 'black -'
     lint-enable
-    set-option global lintcmd 'flake8'
+    set-option global lintcmd 'pylint'
 }
 
 hook global WinSetOption filetype=nix %{
@@ -59,7 +59,7 @@ hook global WinSetOption filetype=(javascript|typescript|css|scss|json|jsonc|mar
 
 map -docstring "xml tag objet" global object t %{c<lt>([\w.]+)\b[^>]*?(?<lt>!/)>,<lt>/([\w.]+)\b[^>]*?(?<lt>!/)><ret>}
 
-map global normal <c-I> :format<ret>
+# map global normal <c-I> :format<ret>
 
 # cursor config
 # ───────────────────────────────────
@@ -102,21 +102,26 @@ hook global ModeChange .*:insert:.* %{ try %{
 # System clipboard handling
 # ─────────────────────────
 
-# Wayland system clipboard
 # https://github.com/mawww/kakoune/wiki/Registers---Clipboard#to-yank-copy
+# TODO: Should use different commands for different platforms
+
 hook global RegisterModified '"' %{ nop %sh{
     if [ -n "$DISPLAY" ]; then
-        printf %s "$kak_main_reg_dquote" | wl-copy > /dev/null 2>&1 &
+        # printf %s "$kak_main_reg_dquote" | wl-copy > /dev/null 2>&1 &
+        printf %s "$kak_main_reg_dquote" | pbcopy
     elif [ -n "$TMUX" ]; then
         tmux set-buffer -- "$kak_main_reg_dquote"
     fi
 }}
 
-map global user P '!wl-paste -n<ret>'
-map global user p '<a-!>wl-paste -n<ret>'
-map global user R '|wl-paste -n<ret>'
+# map global user P '!wl-paste -n<ret>'
+# map global user p '<a-!>wl-paste -n<ret>'
+# map global user R '|wl-paste -n<ret>'
+map global user P '!pbpaste<ret>'
+map global user p '<a-!>pbpaste<ret>'
+map global user R '|pbpaste<ret>'
 
-# Various mappings
+# Other mappings
 # ────────────────
 
 map global normal '#' :comment-line<ret>
@@ -235,6 +240,9 @@ define-command -hidden open_file_picker %{
     edit -existing %val{text}
   }
 }
+
+# Map custom commands to keys (user: space)
+# ───────────────────────────────────────
 
 map global user f ':open_file_picker<ret>'
 map global user r ':grep '

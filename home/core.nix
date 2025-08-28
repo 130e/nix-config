@@ -2,7 +2,10 @@
 
 {
   home.packages = with pkgs; [
-    # Network
+    # Video tools
+    ffmpeg
+
+    # Network tools
     nmap
     netcat
     iperf3
@@ -22,9 +25,12 @@
     xz
     zip
 
-    # Formatter
+    # Format & Lint
     black
     nixfmt
+    pylint
+    prettier
+    shfmt
 
     # Misc
     fastfetch

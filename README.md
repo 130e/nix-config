@@ -2,16 +2,24 @@
 
 The goal is to set up reproducible config for quick boostrapping a new machine and run some experiments.
 
+#### Use Nix across machines
+
 - [x] Generic laptop setup
 - [x] Mac mini
-- [x] Migrate cmdline tool configs from 2024
 - [ ] Update installation instructions
 - [x] Split GUI apps between personal/testbed setup
-- [ ] Proper cpp development env
 - [ ] Macbook pro
 - [ ] Arm pi setup
-- [ ] Nix on droid
+
+#### Integrate more configs
+
+- [x] Migrate cmdline tool configs from 2024
+- [ ] Proper cpp development env
+- [ ] Streamline deploying cursor/vscode user settings
+    - [ ] Mainly dance extension for kakoune experience
 - [ ] Automate browser extension install
+    - [ ] canvasblocker, privacybadger, darkreader, keepassxc
+- [ ] Nix on droid
 
 ## Usage
 
@@ -24,7 +32,8 @@ Refer to official wiki for up-to-date installation instructions.
 ```shell
 # Package update
 nix flake update
-# Configuration update
+# Configuration update 
+# To build/build&switch build/switch
 # NixOS
 sudo nixos-rebuild --flake .#hostname switch --show-trace
 # Darwin

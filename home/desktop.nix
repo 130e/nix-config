@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    brave
   ];
 
   programs = {
@@ -9,14 +10,26 @@
       enable = true;
       # Enable WebGL, cookies and history
       settings = {
-        # "privacy.resistFingerprinting.letterboxing" = true;
         "webgl.disabled" = false;
-        "privacy.resistFingerprinting" = false;
+        # https://librewolf.net/docs/faq/#what-are-the-most-common-downsides-of-rfp-resist-fingerprinting
+        "privacy.fingerprintingProtection" = true;
+        "privacy.resistFingerprinting.overrides" = "+AllTargets,-CSSPrefersColorScheme";
         "privacy.clearOnShutdown.history" = false;
         "privacy.clearOnShutdown.cookies" = false;
         "network.cookie.lifetimePolicy" = 0;
       };
     };
+
+    # TOFIX: not available on darwin
+    # chromium = {
+    #   enable = true;
+    #   commandLineArgs = [
+    #     "--enable-features=UseOzonePlatform"
+    #     "--enable-logging=stderr"
+    #     "--enable-wayland-ime"
+    #   ];
+    #   package = pkgs.ungoogled-chromium;
+    # };
 
     kitty = {
       enable = true;
