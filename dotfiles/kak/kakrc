@@ -99,27 +99,25 @@ hook global ModeChange .*:insert:.* %{ try %{
     unset-face window PrimaryCursorEol
 } }
 
+
 # System clipboard handling
 # ─────────────────────────
-
-# https://github.com/mawww/kakoune/wiki/Registers---Clipboard#to-yank-copy
-# TODO: Should use different commands for different platforms
-
-hook global RegisterModified '"' %{ nop %sh{
-    if [ -n "$DISPLAY" ]; then
-        # printf %s "$kak_main_reg_dquote" | wl-copy > /dev/null 2>&1 &
-        printf %s "$kak_main_reg_dquote" | pbcopy
+# Note: took me 4 hours to figure out how to do this.
+evaluate-commands %sh{
+    if [ "$(uname -s)" = "Darwin" ]; then
+        PASTE_CMD="pbpaste"
+        echo "hook global RegisterModified '\"' %{ nop %sh{ printf %s \"\$kak_main_reg_dquote\" | pbcopy }}"
     elif [ -n "$TMUX" ]; then
-        tmux set-buffer -- "$kak_main_reg_dquote"
+        PASTE_CMD="tmux show-buffer"
+        echo "hook global RegisterModified '\"' %{ nop %sh{ tmux set-buffer -- \"\$kak_main_reg_dquote\" }}"
+    else
+        PASTE_CMD="wl-paste -n"
+        echo "hook global RegisterModified '\"' %{ nop %sh{ printf %s \"\$kak_main_reg_dquote\" | wl-copy > /dev/null 2>&1 & }}"
     fi
-}}
-
-# map global user P '!wl-paste -n<ret>'
-# map global user p '<a-!>wl-paste -n<ret>'
-# map global user R '|wl-paste -n<ret>'
-map global user P '!pbpaste<ret>'
-map global user p '<a-!>pbpaste<ret>'
-map global user R '|pbpaste<ret>'
+    echo "map global user P '!$PASTE_CMD<ret>'"
+    echo "map global user p '<a-!>$PASTE_CMD<ret>'"
+    echo "map global user R '|$PASTE_CMD<ret>'"
+}
 
 # Other mappings
 # ────────────────

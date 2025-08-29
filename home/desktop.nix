@@ -41,6 +41,7 @@
       settings = {
         font_size = 14;
         notify_on_cmd_finish = "unfocused";
+        macos_option_as_alt = "yes";
       };
     };
 
